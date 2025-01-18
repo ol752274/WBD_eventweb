@@ -23,7 +23,11 @@ jobs:
 
     - name: Install Dependencies (Frontend)
       working-directory: ./frontend
-      run: npm install
+      run: npm install && chmod +x node_modules/.bin/react-scripts
+
+    - name: Check react-scripts version
+      working-directory: ./frontend
+      run: npx react-scripts --version
 
     - name: Run Tests (Frontend)
       working-directory: ./frontend
