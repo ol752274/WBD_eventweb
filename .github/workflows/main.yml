@@ -27,11 +27,11 @@ jobs:
 
     - name: Run Tests (Frontend)
       working-directory: ./frontend
-      run: npm test
+      run: npx react-scripts test
 
-    - name: Build React App
+    - name: Build React App with chmod
       working-directory: ./frontend
-      run: npm run build
+      run: chmod +x node_modules/.bin/react-scripts && npm run build
 
     - name: Install Go Dependencies
       working-directory: ./backend
@@ -48,4 +48,4 @@ jobs:
 
     - name: Run Both React and Go Server Simultaneously
       working-directory: .
-      run: npm run both  # Ensure this is the actual command to start both
+      run: npm run both
