@@ -1,0 +1,134 @@
+.EventEmp-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Sidebar styles */
+.EventEmp-sidebar-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f0e68c;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.EventEmp-sidebar-header h2 {
+    color: #222;
+}
+
+.EventEmp-sidebar {
+    background-color: rgba(2, 2, 2, 0.85);
+    width: 16em;
+    padding: 4em 2em 2em 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0.125em 0 0.625em rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    position: fixed;
+    min-height: 120rem;
+}
+
+.EventEmp-profile {
+    text-align: center;
+}
+
+.EventEmp-profile img:hover {
+    transform: scale(1.1);
+}
+
+.EventEmp-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.EventEmp-menu li {
+    margin-bottom: 0.7em;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 0.5em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    position: relative;
+    border-left: 2px solid #f0e68c;
+    border-right: 2px solid #f0e68c;
+  
+}
+
+.EventEmp-menu a {
+    padding: 0.9375em;
+    text-decoration: none;
+    color: #FFF;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: color 0.3s ease;
+}
+
+.EventEmp-menu li:hover {
+    box-shadow: inset 0px 0px 25px #f0e68c;
+    transform: scale(1.05);
+}
+
+.EventEmp-menu li:hover a {
+    color: white;
+}
+
+/* Main content area */
+.EventEmp-main-content {
+    flex-grow: 1;
+    padding: 1em;
+    background-color: #FFF;
+    overflow-y: auto;
+    box-shadow: inset 0 0.125em 0.375em rgba(0, 0, 0, 0.05);
+    overflow-x: hidden;
+    margin-left: 20em;
+}
+
+.EventEmp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.25em;
+    border-bottom: 0.125em solid #BBB;
+    background-color: #ffff;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.EventEmp-header h1 {
+    font-size: 2em;
+    color: #333;
+    font-style: italic;
+}
+
+.EventEmp-profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 12em;
+}
+
+.EventEmp-logout {
+    display: flex;
+    align-items: center;
+}
+
+.EventEmp-logout a {
+    text-decoration: none;
+    color: #f44336;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    font-size: 1.5em;
+    align-items: center;
+}
+
+.EventEmp-logout a:hover {
+    color: #d32f2f;
+}
+
+.emp-outlet-cont{
+    padding-left: 15em;
+}

@@ -1,0 +1,312 @@
+/* General layout */
+.user-dashboard {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 15%;
+  background-color: #0d0d0d;
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+/* Apply the transparent button styles for sidebar buttons */
+.sidebar button {
+  width: 10em;
+  position: relative;
+  height: 2.4em;
+  border: 3px ridge #f0e68c;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 1s;
+  border-radius: 0.3em;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.sidebar button::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #0d0d0d;
+  transition: 0.5s;
+  transform-origin: center;
+}
+
+.sidebar button::before {
+  content: "";
+  transform-origin: center;
+  position: absolute;
+  top: 80%;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #0d0d0d;
+  transition: 0.5s;
+}
+
+.sidebar button:hover::before,
+.sidebar button:hover::after {
+  transform: scale(0);
+}
+
+.sidebar button:hover {
+  box-shadow: inset 0px 0px 25px #f0e68c;
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #EEE
+}
+
+/* Profile details */
+.profile-details {
+  margin-bottom: 10px;
+  border: 1px solid #6b6b6b;
+  padding-bottom: 10px;
+}
+
+.profile-section {
+  width: 90%;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 25px #f2e03c;
+}
+
+
+.profile-details h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.profile-details p {
+  font-size: 16px;
+  color: #000000;
+}
+
+/* Edit profile form */
+.profile-details form label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #000000;
+}
+
+.profile-details form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #0d0d0d;
+  border-radius: 4px;
+}
+
+/* User bookings */
+.user-bookings h2 {
+  margin-bottom: 10px;
+  color: #070707;
+  font-size: 30px;
+}
+.user-bookings {
+  width: 100%;
+}
+
+.user-bookings.with-profile {
+  margin-top: 20px;
+}
+
+.bookings-list {
+  list-style: none;
+  padding: 0;
+}
+
+.booking-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #2e2d2d;
+  border-radius: 4px;
+  background-color: #0f0f0f;
+}
+
+/* No bookings message */
+.no-bookings-message {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Logout button style */
+.book-del-btn {
+  width: 10em;
+  position: relative;
+  height: 3.5em;
+  border: 3px ridge #f0e68c;
+  outline: none;
+  background-color: transparent;
+  color: orange;
+  transition: 1s;
+  border-radius: 0.3em;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.book-del-btn::after{
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  transition: 0.5s;
+  transform-origin: center;
+}
+
+.book-del-btn::before,
+.book-del-btn::after {
+  transform: scale(0);
+}
+
+.book-del-btn:hover {
+  box-shadow: inset 0px 0px 25px #f0e68c;
+}
+
+/* Card container */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Individual card */
+.card {
+  width: 300px;
+  height: 300px;
+  perspective: 1000px;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 10px;
+  padding: 5px; /* Space for the glowing border */
+  background: linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff00ff);
+  background-size: 300% 300%;
+  animation: glowing-border 4s linear infinite;
+  z-index: -1;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border-radius: 10px;
+  background: #ffffff; /* Inner card background */
+  z-index: 1;
+}
+
+/* Card content */
+.card .content {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+  position: relative;
+  z-index: 2;
+}
+
+.card:hover .content {
+  transform: rotateY(180deg);
+}
+
+@keyframes glowing-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Front and back faces */
+.front,
+.back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.front {
+  background-color: #171717;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.back {
+  background-color: #333;
+  color: #fff;
+  transform: rotateY(180deg);
+}
+
+.front .event-details {
+  padding: 25px;
+  margin-top: 50px;
+  font-size: 18px;
+}
+
+.front .event-details p {
+  margin: 5px 0;
+  color: #fff;
+}
+
+.back .details {
+  font-size: 16px;
+}
+
+.front .event-details p,
+.back .details p {
+  font-weight: bold;
+}

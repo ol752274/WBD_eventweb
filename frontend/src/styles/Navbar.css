@@ -1,0 +1,88 @@
+.navbar {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    align-items: center;
+    position: fixed; /* Keep the navbar fixed at the top */
+    top: 0; /* Position at the top of the page */
+    width: 100%; /* Full width of the viewport */
+    z-index: 1000; /* Ensures navbar stays above other content */
+    background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+    padding: 1.5em;
+    box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    margin-right: 2em;
+}
+
+nav ul li {
+    margin: 0 1.5em;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2em;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #f0e68c; /* Gold color on hover */
+}
+
+nav ul li a.active {
+    color: #f0e68c; /* Gold color for the active link */
+}
+
+.login-button a {
+    text-decoration: none;
+    background-color: #f0e68c; /* Gold color for the button */
+    color: #333;
+    padding: 0.5em 1.5em;
+    border-radius: 30px;
+    font-size: 1.3em;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform to transition */
+    margin-right: 2em;
+}
+
+.login-button a:hover {
+    color: black;
+     font-size: 1.31em; /* Scale up and move up slightly on hover */
+}
+/* Existing styles for the navbar and dropdown */
+
+.dropdown {
+    display: none; /* Hide dropdown by default */
+    position: absolute;
+    top: 4em; /* Position below parent */
+    left: 67em ;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 1em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    z-index: 999;
+}
+
+.dropdown li {
+    padding: 10px 0;
+}
+
+.dropdown li a {
+    color: #fff;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.dropdown li a:hover {
+    color: #f0e68c; /* Gold color on hover */
+}
+
+/* Show the dropdown when the visible class is added */
+.dropdown.visible {
+    display: block;
+}
+

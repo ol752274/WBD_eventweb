@@ -1,0 +1,67 @@
+.manage-users {
+    padding: 20px;
+    background-color: #FFF;
+    border-radius: 8px;
+    margin-top:1em;
+}
+
+.manage-users h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #e9e9e9;
+}
+
+table td {
+    color: #555;
+}
+
+/* Add specific styles for Edit and Delete buttons */
+/* Specific button styles */
+table td button {
+    background-color: #f44336; /* Red background for delete */
+    color: white; /* White text */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Add padding for better spacing */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 14px; /* Adjust font size */
+    cursor: pointer; /* Change cursor to pointer */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+}
+
+/* Hover effect for buttons */
+table td button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Active state for button */
+table td button:active {
+    background-color: #b71c1c; /* Even darker red when clicked */
+    transform: scale(0.98); /* Slight shrink effect when clicked */
+}

@@ -1,0 +1,182 @@
+
+.container {
+    width: 60%;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(240, 230, 140, 0.5), /* Warm glow shadow */
+                0 6px 15px rgba(0, 0, 0, 0.5);      /* Subtle drop shadow */
+    animation: fadeIn 0.6s ease-in forwards;
+    margin-top: 8.5rem;
+    color: white;
+    margin-top: 4rem;
+}
+
+
+#h2{
+    text-align: center;
+    color: #FFF; /* Highlight color */
+    margin-bottom: 20px;
+    animation: slideIn 0.4s ease-out;
+    z-index: 1;
+    font-size: 3em;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.bubble-select {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.bubble-container {
+    display: flex; /* Use flexbox to align items horizontally */
+    justify-content: space-around; /* Space bubbles evenly across the row */
+    flex-wrap: wrap; /* Wrap bubbles to the next line if there's not enough space */
+    margin-bottom: 20px;
+
+}
+
+.bubble {
+    width: 200px; /* Size of the bubble */
+    height: 200px; /* Size of the bubble */
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent background for glass effect */
+    backdrop-filter: blur(10px); /* Blur effect for glassmorphism */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+    color: white;
+    font-weight: bold;
+    font-size: 24px; /* Font size */
+    margin: 0 10px; /* Space between bubbles */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Slight shadow */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for glass effect */
+}
+
+.bubble:hover {
+    background-color: rgba(255, 255, 255, 0.4); /* Slightly more opaque on hover */
+}
+
+.bubble.selected {
+    transform: scale(1.1); /* Increase size of selected bubble */
+    background-color: rgba(255, 255, 255, 0.2);
+    z-index: 1; /* Bring selected bubble to the front */
+    color: #f0e68c; /* Highlight color */
+}
+
+.section-header {
+    background-color: #f7df08;
+    padding: 10px;
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: block;
+    color:black;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    color: #e3f08c; /* Highlight color for labels */
+}
+
+/* input[type="text"], input[type="email"], input[type="date"], input[type="time"], select {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.2); 
+    color: black;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    color:#eeee;
+}
+
+input:focus {
+    border-color: #f0e68c;
+    box-shadow: 0 0 5px rgba(240, 230, 140, 0.5);
+    outline: none;
+} */
+
+/* Use a common class for all inputs */
+.input-field {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.2); /* Light transparent input background */
+    color: #eeee;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Apply the focus effect using the same class */
+.input-field:focus {
+    border-color: #f0e68c;
+    box-shadow: 0 0 5px rgba(240, 230, 140, 0.5);
+    outline: none; /* Change to none for better aesthetics */
+}
+
+.select-field {
+    appearance: none; /* Remove default styling */
+    background-color: rgba(255, 255, 255, 0.3); /* Slightly darker background */
+    color: #fff; /* Text color */
+    padding-right: 30px; /* Add padding for dropdown arrow / / Add custom dropdown arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Position the arrow */
+    background-color: #666;
+}
+
+/* Focus effect for select fields */
+.select-field:focus {
+    border-color: #f0e68c;
+    box-shadow: 0 0 5px rgba(240, 230, 140, 0.5);
+    outline: none;
+}
+
+.button {
+    background-color: #f0e68c;
+    color: black;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top:0.5rem;
+}
+
+.button:hover {
+    background-color: #e6b800;
+    transform: translateY(-2px);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#bookingForm {
+    background-color: rgba(255, 255, 255, 0.3);
+    width:100%;
+}

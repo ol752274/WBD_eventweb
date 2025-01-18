@@ -1,0 +1,101 @@
+/* Main Container */
+.main-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 2px 2px black;
+  }
+  
+  /* Contact Us White Container */
+  .contact-us {
+    background: #fff; /* White background */
+    border-radius: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Image Section */
+  .image-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .image-section img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  /* Info Section */
+  .info-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    gap: 20px;
+  }
+  
+  /* Info Cards */
+  .info-card {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Titles */
+  .info-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* Text */
+  .info-card p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 5px 0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .contact-us {
+      flex-direction: column;
+    }
+  
+    .image-section {
+      padding: 20px;
+    }
+  
+    .info-section {
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .info-card h3 {
+      font-size: 1.2rem;
+    }
+  
+    .info-card p {
+      font-size: 0.9rem;
+    }
+  }
+  

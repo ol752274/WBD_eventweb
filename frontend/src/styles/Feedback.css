@@ -1,0 +1,97 @@
+/* Center the feedback container on the page */
+.feedback-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient background */
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Stronger shadow for floating effect */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    color: white; /* Text color for better contrast */
+    animation: fadeIn 1s ease; /* Add fade-in animation */
+    margin-top: 30vh;
+  }
+  
+  /* Header style */
+  .feedback-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    letter-spacing: 1px; /* Slight letter spacing */
+  }
+  
+  /* Email field styling */
+  .email-field {
+    margin-bottom: 20px;
+  }
+  
+  .email-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  
+  .email-field input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  
+  /* Star Rating */
+  .rating {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    font-size: 3rem;
+    cursor: pointer;
+  }
+  
+  .rating .star {
+    color: #ccc; /* Light gray stars */
+    transition: color 0.3s ease, transform 0.3s ease;
+    margin: 0 10px; /* Spacing between stars */
+  }
+  
+  .rating .star.active {
+    color: #ffcc00; /* Active stars in gold */
+    transform: scale(1.3); /* Pop effect on click */
+  }
+  
+  /* Button styling */
+  button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #00bcd4; /* Cyan button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #008c99; /* Darker cyan on hover */
+    transform: translateY(-3px); /* Lift effect */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Shadow on hover */
+  }
+  
+  button:active {
+    transform: translateY(0); /* Reset on click */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Smaller shadow */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .feedback-container {
+      padding: 20px;
+      width: 90%;
+    }
+  
+    .rating {
+      font-size: 2.5rem; /* Slightly smaller stars */
+    }
+  }

@@ -1,0 +1,59 @@
+/* HeroSection.css */
+
+.top-section {
+    position: relative; /* Required for positioning overlay */
+    background-image: url('../../assests/birthday1.jpg'); /* Adjust path as necessary */
+    background-size: cover;
+    background-position: left; /* Start from the left */
+    height: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    opacity: 0; /* Start fully transparent */
+    animation: fadeInBackground 2s forwards; /* Animate background */
+}
+
+@keyframes fadeInBackground {
+    0% {
+        background-position: 0% 0%; /* Start from the left */
+        opacity: 0; /* Start fully transparent */
+    }
+    100% {
+        background-position: 100% 0%; /* Move to the right */
+        opacity: 1; /* End fully visible */
+    }
+}
+
+.top-title {
+    font-size: 4rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    z-index: 2; /* Make sure it appears above background overlay */
+    opacity: 0; /* Start hidden */
+    transform: translateY(-50px); /* Start from above */
+    animation: slideInTitle 1s forwards; /* Animate title */
+    animation-delay: 1.5s; /* Delay to start after the background animation */
+}
+
+@keyframes slideInTitle {
+    0% {
+        transform: translateY(-80px); /* Start from above */
+        opacity: 0; /* Start fully transparent */
+    }
+    100% {
+        transform: translateY(0); /* End in place */
+        opacity: 1; /* End fully visible */
+    }
+}
+
+.top-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 900px; /* Set a fixed height */
+    background-color: rgba(0, 0, 0, 0.5); /* Black overlay with 50% opacity */
+    z-index: 1; /* Ensure it sits above the background image */
+}

@@ -1,0 +1,86 @@
+.big-container-crew {
+  font-family: Arial, sans-serif; /* Dark background */
+  color: black; /* Light text color */
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  justify-content: center;
+  align-items: center;
+  margin-top: 5em;
+  padding: 2rem; /* Added padding for better spacing */
+  text-align: center;
+  margin-bottom: 40em; /* Center text horizontally */
+}
+
+.title {
+  font-size: 3.5rem; /* Adjusted font size */
+  color: #000; /* Highlight color */
+  margin-bottom: 1.5rem; /* Space between title and container */
+  font-family: 'Georgia', serif;
+}
+
+.subcrew {
+  color: black; /* Slightly lighter color for subtitle */
+  margin-top: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.employees {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 90rem;
+  position: relative;
+  margin-top: 3.5em;
+}
+
+.employee {
+  background-color: #2c2c2c; /* Dark background for process steps */
+  border-radius: 50%;
+  padding: 4rem;
+  box-shadow: 0px 0.4rem 1.5rem rgba(0, 0, 0, 0.3); /* Darker shadow */
+  text-align: center;
+  width: 22rem;
+  height: 22rem;
+  border: 0.1rem solid #3a3a3a; /* Darker border */
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+
+.employee img {
+  width: 10rem;
+  height: 10rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.employee h3 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem; /* Reduced space between title and text */
+  color:#f0e68c; /* Highlight color */
+}
+
+.employee p {
+  font-size: 1rem;
+  color: #e0e0e0; /* Light text color */
+  line-height: 1.6;
+  padding: 0 2rem;
+}
+
+.employee-name {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: #ffcc00; /* Highlight color */
+}
+
+.fade-in {
+  opacity: 1;
+  visibility: visible;
+}

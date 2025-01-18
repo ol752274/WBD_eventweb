@@ -1,0 +1,40 @@
+.employee-profile {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    padding: 20px;
+    margin-left:8em;
+    
+  }
+  
+  .profile-image {
+    flex: 1; /* Allow the image to take space */
+    margin-right: 20px; /* Add space between image and details */
+  }
+  
+  .emp-image {
+    width: 18em; /* Adjust width as needed */
+    height: 18em; /* Maintain aspect ratio */
+    border-radius: 8px; /* Optional: Add rounded corners */
+  }
+  
+  .profile-details {
+    flex: 2; /* Allow the details section to take more space */
+    box-shadow: inset 0px 0px 25px #f2e03c;
+  }
+  
+  .employee-profile .edit-EmpProfile-btn {
+    margin-top: 20px; /* Space above the button */
+    padding: 10px 20px;
+    background-color: #333; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .employee-profile .edit-EmpProfile-btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+
+ 

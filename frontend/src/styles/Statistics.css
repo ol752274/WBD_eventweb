@@ -1,0 +1,34 @@
+/* IncomeBarChart.css */
+
+/* Container for the entire chart component */
+.container1 {
+    width:70%;
+    padding: 20px; /* Padding inside the container */
+    margin: 20px; /* Margin around the container */
+    background-color: #FFF; /* Light grey background color */
+ /* Light shadow for depth */
+}
+
+/* Container for each chart */
+.chartContainer1 {
+    height: 30rem; /* Fixed height for the chart */
+    max-height:100rem; /* Maximum height to prevent overflow */
+    overflow: hidden; /* Hide overflow content */
+}
+
+/* Message display for loading and other alerts */
+.message {
+    padding: 10px; /* Padding inside the message box */
+    margin: 10px 0; /* Margin above and below the message */
+    border-radius: 4px; /* Rounded corners for the message box */
+    text-align: center; /* Center the text */
+}
+
+/* Error message styling */
+.error {
+    color: red; /* Red text for errors */
+    background-color: #ffe6e6; /* Light red background for visibility */
+    padding: 10px; /* Padding inside the error message */
+    border-radius: 4px; /* Rounded corners for the error box */
+    margin: 10px 0; /* Margin above and below the error box */
+}

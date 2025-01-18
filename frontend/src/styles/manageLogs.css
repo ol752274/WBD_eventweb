@@ -1,0 +1,120 @@
+/* General Layout */
+.container3 {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 900px;
+  }
+  
+  .heading3 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Search and Sort Options */
+  .search-sort-container3 {
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .label3 {
+    font-weight: bold;
+    color: #555;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .input-text3 {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .select3 {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .button3 {
+    padding: 10px 15px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .button3:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .button3:hover {
+    background-color: #4cae4c;
+  }
+  
+  /* Error message */
+  .error-message3 {
+    color: #e74c3c;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  /* Table Styles */
+  .table3 {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .table3,
+  .th3,
+  .td3 {
+    border: 1px solid #ddd;
+  }
+  
+  .thead3 {
+    background-color: #f8f8f8;
+  }
+  
+  .th3,
+  .td3 {
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .th3 {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .td3 {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Hover effect on table rows */
+  .tbody-row3:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Centered empty state message */
+  .empty-state3 {
+    text-align: center;
+    font-size: 16px;
+    color: #999;
+  }

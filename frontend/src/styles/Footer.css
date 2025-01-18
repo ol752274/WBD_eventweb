@@ -1,0 +1,136 @@
+.footer-footer {
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 5px 0;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin-top: 10em;
+    opacity: 0; /* Start fully transparent */
+    transition: opacity 2s ease-in-out; 
+     
+}
+  
+.footer-footer.fade-in-active {
+    opacity: 1; /* Fully visible */
+    animation: fadeInBackground 2s forwards;
+  }
+  
+.footer-overlay {
+    padding: 50px 0;
+}
+  
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+  
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.footer-col {
+    flex: 1;
+    margin-top: 0px;
+}
+
+.footer-col1 h4{
+    font-size: 23px;
+    color: #f0e68c;
+}
+.footer-col1 {
+    flex: 1;
+    font-size: large;
+    line-height: 1.7;
+}
+.footer-col p{
+    font-size: 1em;
+    color: #fff;
+    margin-bottom: 1em;
+    margin-top: 0em;
+}
+.footer-footer-logo {
+    max-width: 200px;
+    margin-bottom: 10px;
+}
+  
+/* Styling for social icons */
+.footer-social-icons a {
+    font-size: 24px;
+    margin-right: 15px;
+    transition: transform 0.8s ease-in-out;
+}
+  
+/* Hover colors for each icon */
+.footer-social-icons a.footer-facebook:hover {
+    color: #3b5998;
+}
+  
+.footer-social-icons a.footer-twitter:hover {
+    color: #1da1f2;
+}
+  
+.footer-social-icons a.footer-instagram:hover {
+    color: #e1306c;
+}
+  
+.footer-social-icons a.footer-youtube:hover {
+    color: #ff0000;
+}
+  
+.footer-ul {
+    list-style-type:none;
+    padding-left: 0;
+    line-height: 2;
+}
+  
+.footer-ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+  
+.footer-ul li a.footer-whatsapp {
+    color: #11f52c;
+}
+  
+.footer-ul li a.footer-mail {
+    color: #ee3510;
+}
+  
+/* Hover effect for WhatsApp and mail */
+.footer-ul li a.footer-whatsapp:hover {
+    color: #11f52c;
+}
+  
+.footer-ul li a.footer-mail:hover {
+    color: #ee3510;
+}
+  
+.footer-hr {
+    border-color: rgba(255, 255, 255, 0.2);
+    margin: 40px 0;
+}
+  
+.footer-footer a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+}
+  
+.footer-footer a:hover {
+    color: #f0e68c;;
+}
+  
+.footer-bottom {
+    text-align: center;
+}
+
+@keyframes fadeInBackground {
+    0% {
+        background-position: 0% 0%; /* Start from the left */
+        opacity: 0; /* Start fully transparent */
+    }
+    100% {
+        background-position: 100% 0%; /* Move to the right */
+        opacity: 1; /* End fully visible */
+    }
+}

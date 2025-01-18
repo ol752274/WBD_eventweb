@@ -1,0 +1,239 @@
+/* Default state */
+.services {
+  margin-top: 5em;
+  display: flex;
+  justify-content: center;
+  background-color: #0a0a0a;
+  color: #f3f3f3;
+  font-family: 'Arial', sans-serif;
+  padding-top: 5em;
+  opacity: 0; /* Start fully transparent */
+  transition: opacity 2s ease-in-out;
+}
+
+/* Trigger animation when active */
+.services.fade-in-active {
+  opacity: 1; /* Fully visible */
+  animation: fadeInBackground 2s forwards;
+}
+
+
+.services h1 {
+  color: #f0e68c; 
+  font-size: 3.5em;
+  margin-bottom: 1em;
+  font-family: 'Georgia', serif;
+}
+
+.intro-text {
+
+  max-width: 19em;
+  font-size: 1em;
+  line-height: 1.8em;
+  margin-top: -1em;
+}
+
+.intro-text p{
+  font-size: 1.2em;
+  line-height: 1.7;
+  color: #AAA;
+}
+.service-grid {
+  display: flex;
+  gap: 3em;
+  justify-content: center;
+  height: 22em;
+}
+
+
+/* Grayscale images by default */
+.service-item-wedding img, .service-item-birthday img, .service-item-social img, .service-item-corperate img {
+  filter: grayscale(95%); /* Apply grayscale */
+  transition: filter 0.3s ease; /* Smooth transition when hovering */
+}
+
+.service-item-wedding img:hover, .service-item-birthday img:hover, .service-item-social img:hover, .service-item-corperate img:hover {
+  filter: grayscale(0%); /* Remove grayscale on hover */
+}
+
+/* Service Item Wedding */
+.service-item-wedding {
+  width: 19em;
+  padding: 1em;
+}
+
+.service-item-wedding img {
+  border: 0.5em white solid;
+  height: 17em;
+  width: 12em;
+}
+
+.service-item-wedding p {
+  font-family: initial;
+  font-size: 1.6em;
+  transform: translateY(-14.2em) translateX(11.5em);
+  display: inline-block;
+}
+
+.service-item-wedding h4 {
+  font-family: initial;
+  font-size: 4em;
+  transform: translateX(4.5em) translateY(-4em); 
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#wedding-hr {
+  transform: translateY(-21.5em) translateX(9.5em);
+  width: 10em;
+  border: 0.15em white solid;
+}
+
+#wedding-more {
+  color: #f0e68c;
+  font-size: 1.25em;
+  display: inline-block;
+  transform: translatex(11em) translateY(-16.8em);
+}
+
+#wedding-more:hover, #birthday-more:hover, #social-more:hover, #corporate-more:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Service Item Birthday */
+.service-item-birthday img {
+  border: 0.5em white solid;
+  height: 12em;
+  width: 17em;
+}
+
+.service-item-birthday p {
+  font-family: initial;
+  font-size: 1.6em;
+  transform: translateY(-5em) translateX(5.2em);
+  display: inline-block;
+}
+
+.service-item-birthday h4 {
+  font-family: initial;
+  font-size: 4em;
+  transform: translateX(0.6em) translateY(1em); 
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#birthday-hr {
+  transform: rotate(90deg) translatex(-5.5em) translateY(3.8em);
+  width: 10em;
+  border: 0.15em white solid;
+}
+
+#birthday-more {
+  color: #f0e68c;
+  font-size: 1.25em;
+  display: inline-block;
+  transform: translatex(0.3em) translateY(-5em);
+}
+
+/* Service Item Social */
+.service-item-social {
+  padding-left: 0em;
+}
+
+.service-item-social img {
+  border: 0.5em white solid;
+  height: 12em;
+  width: 17em;
+  margin-top: 5em;
+}
+
+.service-item-social p {
+  font-family: initial;
+  font-size: 1.6em;
+  transform: translateY(-16.8em) translateX(6.5em);
+  display: inline-block;
+}
+
+.service-item-social h4 {
+  font-family: initial;
+  font-size: 4em;
+  transform: translateX(0.9em) translateY(-3.5em); 
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#social-hr {
+  transform: rotate(90deg) translatex(-20em) translateY(2em);
+  width: 10em;
+  border: 0.15em white solid;
+}
+
+#social-more {
+  color: #f0e68c;
+  font-size: 1.25em;
+  display: inline-block;
+  transform: translatex(3.5em) translateY(-20em);
+}
+
+/* Service Item Corporate */
+.service-item-corperate {
+  padding-left: 6em;
+}
+
+.service-item-corperate img {
+  border: 0.5em white solid;
+  height: 17em;
+  width: 12em;
+}
+
+.service-item-corperate p {
+  font-family: initial;
+  font-size: 1.6em;
+  transform: translateY(-12.5em) translateX(-2em);
+  display: inline-block;
+}
+
+.service-item-corperate h4 {
+  font-family: initial;
+  font-size: 4em;
+  transform: translateX(-0.2em) translateY(-0.1em); 
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#corporate-hr {
+  transform: translateY(-11em) translateX(-6em);
+  width: 11em;
+  border: 0.15em white solid;
+}
+
+#corporate-more {
+  color: #f0e68c;
+  font-size: 1.25em;
+  display: inline-block;
+  transform: translatex(-6.5em) translateY(-14.4em);
+}
+
+
+@keyframes fadeInBackground {
+  0% {
+      background-position: 0% 0%; /* Start from the left */
+      opacity: 0; /* Start fully transparent */
+  }
+  100% {
+      background-position: 100% 0%; /* Move to the right */
+      opacity: 1; /* End fully visible */
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(3.125em); /* 50px to em */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
