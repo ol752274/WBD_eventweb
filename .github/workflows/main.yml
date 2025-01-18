@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
@@ -19,7 +19,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'  # Node.js version for React
+        node-version: '16'
 
     - name: Install Dependencies (Frontend)
       working-directory: ./frontend
@@ -27,24 +27,25 @@ jobs:
 
     - name: Run Tests (Frontend)
       working-directory: ./frontend
-      run: npm test  # Change to your test command (Jest, React Testing Library)
+      run: npm test
 
     - name: Build React App
       working-directory: ./frontend
-      run: npm run build  # Builds the frontend React app
+      run: npm run build
 
     - name: Install Go Dependencies
       working-directory: ./backend
-      run: go mod tidy  # Make sure Go dependencies are installed
-    
+      run: go mod tidy
+
     - name: Run Tests (Backend)
       working-directory: ./backend
-      run: go test ./...  # Run all backend tests
+      run: sudo go test ./...
 
-    - name: Build and Run Go Server
-      working-directory: ./backend
-      run: go run server.go  # Runs the Go server
+    - name: Start React App and Go Server Simultaneously
+      run: |
+        npm start & 
+        go run server.go
 
     - name: Run Both React and Go Server Simultaneously
       working-directory: .
-      run: npm run both  # Run both React frontend and Go backend
+      run: npm run both  # Ensure this is the actual command to start both
