@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20] # Corrected to use a list syntax, even for a single version
+        node-version: [20]
 
     steps:
     - uses: actions/checkout@v4
@@ -23,6 +23,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm install react-scripts --save-dev  # Add this line to install react-scripts
+    - run: npm install react-scripts --save-dev
     - run: npm run build --if-present
     - run: npm test
