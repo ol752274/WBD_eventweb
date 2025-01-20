@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import App from 'C:/Users/Omesh/OneDrive/Documents/GitHub/WBD_eventweb/frontend/src/App';
+import App from '../src/App';
 
 test('renders learn react link', () => {
   render(<App/>);
