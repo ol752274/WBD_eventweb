@@ -15,6 +15,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.28.2",
     "react-scripts": "^5.0.1",
+    "styled-components": "^6.1.14",
     "web-vitals": "^2.1.4"
   },
   "jest": {
@@ -51,12 +52,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.26.3",
-    "babel-core": "^7.0.0-bridge.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "babel-jest": "^29.7.0",
+    "babel-plugin-styled-components": "^2.1.4",
     "concurrently": "^9.0.1",
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "eslint": "^8.36.0"
   }
 }
