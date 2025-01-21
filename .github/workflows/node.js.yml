@@ -8,9 +8,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [20]
@@ -22,7 +20,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm install @testing-library/jest-dom --save-dev  # Add this to install jest-dom
-    - run: npm run build --if-present
-    - run: npm test
+    - run: cd frontend && npm ci
+    - run: cd frontend && npm install
+    - run: cd frontend && npm run build --if-present
+    - run: cd frontend && npm test
