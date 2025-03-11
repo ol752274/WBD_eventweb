@@ -4,7 +4,7 @@ const router = express.Router();
 // Booking route
 
 
-router.get('/trailAdmin', async (req, res) => {
+router.get('/trailAdmin', async (req, res, next) => {
     try {
         const bookings = await Booking.find({});
 
@@ -27,9 +27,19 @@ router.get('/trailAdmin', async (req, res) => {
 
         res.json(incomeByEventType);
     } catch (error) {
-        console.error('Error fetching event incomes:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error)
+        
     }
 });
+
+router.use((err, req, res, next) => {
+    logger.error({
+      method: req.method,
+      url: req.originalUrl,
+      message: err.message,
+      stack: err.stack,
+    });
+    res.status(500).json({ error: 'Internal Server Error' });
+  });
 
 module.exports = router;

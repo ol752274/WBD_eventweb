@@ -1,40 +1,99 @@
 .employee-profile {
     display: flex;
-    align-items: flex-start; /* Align items to the top */
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
-    margin-left:8em;
-    
-  }
-  
-  .profile-image {
-    flex: 1; /* Allow the image to take space */
-    margin-right: 20px; /* Add space between image and details */
-  }
-  
-  .emp-image {
-    width: 18em; /* Adjust width as needed */
-    height: 18em; /* Maintain aspect ratio */
-    border-radius: 8px; /* Optional: Add rounded corners */
-  }
-  
-  .profile-details {
-    flex: 2; /* Allow the details section to take more space */
-    box-shadow: inset 0px 0px 25px #f2e03c;
-  }
-  
-  .employee-profile .edit-EmpProfile-btn {
-    margin-top: 20px; /* Space above the button */
+    max-width: 800px;
+    margin: 2em auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.emp-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f2e03c;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-details {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 16px;
+    margin: 8px 0;
+    color: #555;
+}
+
+button {
     padding: 10px 20px;
-    background-color: #333; /* Bootstrap primary color */
-    color: white;
     border: none;
     border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .employee-profile .edit-EmpProfile-btn:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-  }
+    transition: all 0.3s ease;
+    margin: 10px;
+}
 
- 
+.edit-EmpProfile-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.edit-EmpProfile-btn:hover {
+    background-color: #0056b3;
+}
+
+.save-profile-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.save-profile-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-edit-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-edit-btn:hover {
+    background-color: #c82333;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: #444;
+}
+
+form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+

@@ -8,13 +8,12 @@ const Employee = require('../models/Employee');
 const Booking = require('../models/eventBookings');
 
 
-router.get('/manageEmpRegistrations', async (req, res) => {
+router.get('/manageEmpRegistrations', async (req, res, next) => {
     try {
       const employees = await empRegistrations.find(); // Fetch all employees from the database
       res.status(200).json(employees); // Send the result as JSON
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to fetch employees' });
+      next(error);
     }
   });
   
@@ -23,7 +22,7 @@ router.get('/manageEmpRegistrations', async (req, res) => {
   // Approve an employee
 
 
-router.post('/approveEmployee/:id', async (req, res) => {
+router.post('/approveEmployee/:id', async (req, res, next) => {
   try {
     // Fetch the employee to approve
     const employee = await empRegistrations.findById(req.params.id);
@@ -36,10 +35,6 @@ router.post('/approveEmployee/:id', async (req, res) => {
     if (existingEmployee) {
       return res.status(400).json({ message: 'An employee with this email already exists' });
     }
-
-    // // Hash the employee password if it is not already hashed
-    // const salt = await bcrypt.genSalt(10);
-    // const hashedPassword = await bcrypt.hash(employee.password, salt);
 
     // Create new Employee document
     const newEmployee = new Employee({
@@ -75,24 +70,22 @@ router.post('/approveEmployee/:id', async (req, res) => {
 
     res.status(200).json({ message: 'Employee approved successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error', details: error.message });
+    next(error);
   }
 });
 
 
 
-  router.get('/manageEmployees', async (req, res) => {
+  router.get('/manageEmployees', async (req, res, next) => {
     try {
       const employees = await Employee.find(); // Fetch all employees from the database
       res.status(200).json(employees); // Send the result as JSON
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to fetch employees' });
+      next(error);
     }
   });
 
-  router.delete('/deleteEmployee/:id', async (req, res) => {
+  router.delete('/deleteEmployee/:id', async (req, res, next) => {
     try {
         // Find the employee by ID
         const employee = await Employee.findById(req.params.id);
@@ -108,12 +101,11 @@ router.post('/approveEmployee/:id', async (req, res) => {
 
         res.status(200).json({ message: 'Employee deleted successfully' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+      next(error);
     }
 });
 
-router.delete('/deleteEmpRegistrations/:id', async (req, res) => {
+router.delete('/deleteEmpRegistrations/:id', async (req, res, next) => {
   try {
       // Find the employee by ID
       const employee = await empRegistrations.findById(req.params.id);
@@ -129,13 +121,12 @@ router.delete('/deleteEmpRegistrations/:id', async (req, res) => {
 
       res.status(200).json({ message: 'Employee deleted successfully' });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 });
 
 
-router.get('/manageUsers', async (req, res) => {
+router.get('/manageUsers', async (req, res, next) => {
   try {
     const users = await User.find(); // Fetch users from the database
     const roles = await Role.find(); // Fetch all roles
@@ -154,7 +145,7 @@ router.get('/manageUsers', async (req, res) => {
 
     res.json(usersWithRoles);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching users' });
+    next(err);
   }
 });
 
@@ -162,7 +153,7 @@ router.get('/manageUsers', async (req, res) => {
 
 
 // Delete a user by ID
-router.delete('/deleteUsers/:id', async (req, res) => {
+router.delete('/deleteUsers/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const deletedUser = await User.findByIdAndDelete(id); // Delete user
@@ -176,11 +167,11 @@ router.delete('/deleteUsers/:id', async (req, res) => {
 
     res.status(204).send(); // No content to send back
   } catch (err) {
-    res.status(500).json({ message: 'Error deleting user' });
+    next(err);
   }
 });
 
-router.get('/getAdminName', async (req, res) => {
+router.get('/getAdminName', async (req, res, next) => {
   try {
     if (!req.session || !req.session.email) {
       return res.status(401).json({ success: false, message: 'Unauthorized access' });
@@ -196,8 +187,7 @@ router.get('/getAdminName', async (req, res) => {
     // Return the admin name to the client
     res.json({ success: true, adminName: roleEntry.email });
   } catch (error) {
-    console.error('Error fetching admin name:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    next(error);
   }
 });
 
@@ -205,7 +195,7 @@ router.get('/getAdminName', async (req, res) => {
 
 // ======================= User Management Routes ======================= //
 
-router.get('/getMyUserProfileDetails', async (req, res) => {
+router.get('/getMyUserProfileDetails', async (req, res, next) => {
   try {
     console.log('Session email:', req.session.email); // Debugging
     
@@ -233,13 +223,12 @@ router.get('/getMyUserProfileDetails', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error fetching user details:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    next(error);
   }
 });
 ;
 
-router.post('/updateMyUserProfile', async (req, res) => {
+router.post('/updateMyUserProfile', async (req, res, next) => {
   try {
     // Check if the session has the user's email
     if (!req.session.email) {
@@ -262,12 +251,6 @@ router.post('/updateMyUserProfile', async (req, res) => {
     // if (email) user.email = email;
     if (phone) user.phone = phone;
 
-    // // If password is provided, hash it before saving
-    // if (password) {
-    //   const bcrypt = require('bcryptjs');
-    //   const salt = await bcrypt.genSalt(10);
-    //   user.password = await bcrypt.hash(password, salt);
-    // }
 
     // Save the updated user details
     const updatedUser = await user.save();
@@ -275,11 +258,19 @@ router.post('/updateMyUserProfile', async (req, res) => {
     // Return the updated user details
     res.json({ success: true, user: updatedUser });
   } catch (error) {
-    console.error('Error updating user profile:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    next(error);
   }
 });
-
+ 
+router.use((err, req, res, next) => {
+  logger.error({
+    method: req.method,
+    url: req.originalUrl,
+    message: err.message,
+    stack: err.stack,
+  });
+  res.status(500).json({ error: 'Internal Server Error' });
+});
 
 
 

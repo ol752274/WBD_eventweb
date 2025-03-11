@@ -7,7 +7,11 @@ const MainUser = () => {
   const [userBookings, setUserBookings] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [updatedDetails, setUpdatedDetails] = useState(null); // Initialize as null
+  const [updatedDetails, setUpdatedDetails] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);  // ✅ Declare selectedBooking
+  const [rating, setRating] = useState(0);  // ✅ Declare rating state
+  const [showRatingModal, setShowRatingModal] = useState(false); // ✅ Declare modal state
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -159,6 +163,31 @@ const MainUser = () => {
       }
     }
   };
+  const handleSubmitRating = async () => {
+    if (!selectedBooking) return;
+    try {
+      const response = await fetch(`http://localhost:5000/bookings/${selectedBooking._id}/rate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ rating }),
+      });
+  
+      const data = await response.json();
+      if (data.success) {
+        alert('Rating submitted successfully!');
+        setShowRatingModal(false);
+        setSelectedBooking(null);
+        setRating(0);
+      } else {
+        alert(data.message || 'Failed to submit rating');
+      }
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+      alert('An error occurred while submitting the rating.');
+    }
+  };
+  
 
   if (!userDetails) {
     return <p>Loading...</p>;
@@ -183,12 +212,32 @@ const MainUser = () => {
         <button onClick={handleLogout}>
           Logout
         </button>
-        <button onClick={() => navigate('/feedback')}>
-           Feed back
-       </button>
       </div>
 
       <div className="main-content">
+      {showRatingModal && (
+          <div className="rating-modal">
+            <div className="modal-content">
+              <h1>Rate Your Experience</h1>
+              <p>Booking: {selectedBooking?.eventType}</p>
+              <p><strong>Employee Email:</strong> {selectedBooking?.employeeEmail}</p>
+              <div className="star-rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    className={star <= rating ? 'star selected' : 'star'}
+                    onClick={() => setRating(star)}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <button onClick={handleSubmitRating}>Submit</button>
+              <button onClick={() => setShowRatingModal(false)}>Cancel</button>
+            </div>
+          </div>
+        )}
+
   {showProfile && (
     <div className="profile-section">
       <div className="profile-details">
@@ -263,6 +312,15 @@ const MainUser = () => {
                 <button onClick={() => handleDeleteBooking(booking._id)} className="book-del-btn">
                   Cancel Booking
                 </button>
+                <button
+                        className="book-del-btn"
+                        onClick={() => {
+                          setSelectedBooking(booking);
+                          setShowRatingModal(true);
+                        }}
+                      >
+                        Rate
+                      </button>
               </div>
             </div>
           </div>

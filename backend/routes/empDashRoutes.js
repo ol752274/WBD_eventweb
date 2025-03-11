@@ -3,7 +3,7 @@ const router = express.Router();
 const Employee = require('../models/Employee');
 
 // Route to get employee details based on session email
-router.get('/getMyEmpProfileDetails', async (req, res) => {
+router.get('/getMyEmpProfileDetails', async (req, res, next) => {
   try {
     console.log('Session email:', req.session.email); // Debugging
     
@@ -18,13 +18,12 @@ router.get('/getMyEmpProfileDetails', async (req, res) => {
     
     res.json({ success: true, employee });
   } catch (error) {
-    console.error('Error fetching employee details:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    next(error);
   }
 });
 
 
-router.post('/updateEmpProfile', async (req, res) => {
+router.post('/updateEmpProfile', async (req, res, next)=> {
   try {
     const { employeeId, firstName, lastName, email, phone, maritalStatus, dob, street, city, state, country, experience, skills, limit } = req.body;
     
@@ -61,9 +60,18 @@ router.post('/updateEmpProfile', async (req, res) => {
 
     res.json({ success: true, employee: updatedEmployee });
   } catch (error) {
-    console.error('Error updating employee profile:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    next(error);
   }
+});
+
+router.use((err, req, res, next) => {
+  logger.error({
+    method: req.method,
+    url: req.originalUrl,
+    message: err.message,
+    stack: err.stack,
+  });
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 module.exports = router;

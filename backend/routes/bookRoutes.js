@@ -11,12 +11,12 @@ router.get('/check-session', (req, res) => {
     res.json(req.session);    // Sends session data as JSON to the frontend
 });
 
-router.get("/employees", async (req, res) => {
+router.get("/employees", async (req, res, next) => {
   try {
     const employees = await Employee.find({});
     res.json(employees);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch employees" });
+    next(err);
   }
 });
 
@@ -40,7 +40,7 @@ const handleError = (res, message, status = 500) => {
 };
 
 
-router.post('/book', authenticateUser, async (req, res) => {
+router.post('/book', authenticateUser, async (req, res, next) => {
   try {
       // Check if the user has the correct role
       if (req.user.role !== 'User') {
@@ -119,26 +119,25 @@ router.post('/book', authenticateUser, async (req, res) => {
 
       res.status(201).json({ message: 'Booking saved successfully', booking });
   } catch (error) {
-      console.error('Error saving booking:', error);
-      res.status(500).json({ error: 'Error saving booking: ' + error.message });
+    next(error);
   }
 });
 
 
 
-router.get('/bookings', async (req, res) => {
+router.get('/bookings', async (req, res, next) => {
     try {
       const bookings = await Booking.find();
       res.json(bookings);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      next(err);
     }
   });
 
 
 
 
-  router.delete('/bookings/:id', async (req, res) => {
+  router.delete('/bookings/:id', async (req, res, next) => {
     try {
       // Find the booking to be deleted
       const booking = await Booking.findById(req.params.id);
@@ -225,12 +224,11 @@ router.get('/bookings', async (req, res) => {
       await logEntry.save();
       res.status(200).send('Booking and associated employment period removed successfully');
     } catch (error) {
-      res.status(500).send('Error deleting booking');
-      console.error(error);
+      next(error);
     }
   });
   
-  router.get('/my-bookings', async (req, res) => {
+  router.get('/my-bookings', async (req, res, next) => {
     try {
       const employeeEmail = req.session.email;
       console.log('Session email received in /my-bookings:', req.session.email);
@@ -250,12 +248,11 @@ router.get('/bookings', async (req, res) => {
       // Send bookings to the frontend
       res.json(bookings);
     } catch (error) {
-      console.error('Error fetching employee bookings:', error);
-      res.status(500).json({ message: 'Server error while fetching bookings' });
+      next(error);
     }
   });
 
-  router.get('/MeAsUserBookings', async (req, res) => {
+  router.get('/MeAsUserBookings', async (req, res, next) => {
     try {
         const userEmail = req.session.email;
 
@@ -272,13 +269,12 @@ router.get('/bookings', async (req, res) => {
 
         res.json(bookings);
     } catch (error) {
-        console.error('Error fetching user bookings:', error);
-        res.status(500).json({ message: 'Server error while fetching bookings' });
+      next(error);
     }
 });
 
   
-router.get('/logs', async (req, res) => {
+router.get('/logs', async (req, res, next) => {
   try {
     const { sortBy, order, eventType } = req.query;
 
@@ -309,8 +305,52 @@ router.get('/logs', async (req, res) => {
 
     res.json({ logs });
   } catch (error) {
-    console.error('Error fetching logs:', error);
-    res.status(500).json({ error: 'Error fetching logs: ' + error.message });
+    next(error);
   }
 });
+
+router.post('/bookings/:bookingId/rate', async (req, res, next) => {
+  try {
+      const { rating } = req.body; // New rating given by the user
+      const { bookingId } = req.params;
+
+      if (rating < 1 || rating > 5) {
+          return res.status(400).json({ success: false, message: "Invalid rating value" });
+      }
+
+      const booking = await Booking.findById(bookingId);
+      if (!booking) {
+          return res.status(404).json({ success: false, message: "Booking not found" });
+      }
+
+      const employee = await Employee.findOne({ email: booking.employeeEmail });
+      if (!employee) {
+          return res.status(404).json({ success: false, message: "Employee not found" });
+      }
+
+      // New formula: newRating = newRating + currentRating
+      const updatedRating = rating + employee.rating;
+      const updatedRateCount = employee.rateCount + 1;
+
+      // Update employee rating and rate count
+      employee.rating = updatedRating;
+      employee.rateCount = updatedRateCount;
+      await employee.save();
+
+      res.status(200).json({ success: true, message: "Rating submitted successfully!", updatedRating, updatedRateCount });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.use((err, req, res, next) => {
+  logger.error({
+    method: req.method,
+    url: req.originalUrl,
+    message: err.message,
+    stack: err.stack,
+  });
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
 module.exports = router;

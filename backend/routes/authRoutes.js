@@ -7,6 +7,7 @@ const empRegistrations = require('../models/empRegistrations');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+
 let resetTokens = {}; // A simple way to store reset tokens
 
 // Configure storage for uploaded files
@@ -25,7 +26,7 @@ const upload = multer({ storage: storage });
 // Your existing routes here...
 
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', async (req, res ,next ) => {
   const { name, email, phone, password, confirmPassword } = req.body; // Include phone in destructuring
 
   // Check if passwords match
@@ -59,13 +60,13 @@ router.post('/signup', async (req, res) => {
     await newRole.save();
 
     res.status(201).json({ message: 'User registered successfully' });
+    
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    next(err);
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next ) => {
   const { email, password } = req.body;
 
   try {
@@ -103,9 +104,10 @@ router.post('/login', async (req, res) => {
     
     // Send success response with dashboard URL
     res.json({ success: true, role: roleEntry.role, redirectUrl: dashboardUrl });
+   
+
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
+    next(error);
   }
 });
 
@@ -137,7 +139,7 @@ router.get('/user/checksession', (req, res) => {
 });
 
 
-router.post('/register', upload.single('image'), async (req, res) => {
+router.post('/register', upload.single('image'), async (req, res, next )=> {
   const { firstName, lastName, maritalStatus, dob, email, phone, street, city, state, country, experience, skills, password } = req.body;
 
   try {
@@ -172,8 +174,7 @@ router.post('/register', upload.single('image'), async (req, res) => {
     await newEmployee.save();
     res.status(201).json({ message: 'Your registration will be approved by us very soon' });
   } catch (error) {
-    console.error('Error during registration:', error.message);
-    res.status(500).json({ error: 'An error occurred while registering the employee', details: error.message });
+    next(error);
   }
 });
 // Route to fetch bookings based on email
@@ -182,7 +183,7 @@ router.post('/register', upload.single('image'), async (req, res) => {
 //Forgot and Reset Password
 
 // Send Password Reset Link
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password',async (req, res, next )=> {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -216,13 +217,12 @@ router.post('/forgot-password', async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Password reset link sent successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    next(error);
   }
 });
 
 // Reset Password
-router.post('/reset-password', async (req, res) => {
+router.post('/reset-password',async (req, res, next )=> {
   const { email, newPassword } = req.body;
 
   try {
@@ -246,9 +246,18 @@ router.post('/reset-password', async (req, res) => {
     await user_role.save()
     res.json({ message: 'Password updated successfully!' });
   } catch (error) {
-    console.error('Error updating password:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
+});
+
+router.use((err, req, res, next) => {
+  logger.error({
+    method: req.method,
+    url: req.originalUrl,
+    message: err.message,
+    stack: err.stack,
+  });
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 module.exports = router;

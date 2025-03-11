@@ -310,3 +310,82 @@
 .back .details p {
   font-weight: bold;
 }
+
+.rating-modal {
+  position: fixed;
+  top: 50%;
+  left: 55%;
+  width: 450px;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content h1 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.modal-content p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-size: 30px;
+  margin: 15px 0;
+}
+
+.star {
+  cursor: pointer;
+  color: lightgray;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.star:hover {
+  color: gold;
+  transform: scale(1.2);
+}
+
+.star.selected {
+  color: gold;
+}
+
+.modal-content button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.modal-content button:first-of-type {
+  background: #28a745;
+  color: white;
+  margin-right: 10px;
+}
+
+.modal-content button:first-of-type:hover {
+  background: #218838;
+}
+
+.modal-content button:last-of-type {
+  background: #dc3545;
+  color: white;
+}
+
+.modal-content button:last-of-type:hover {
+  background: #c82333;
+}

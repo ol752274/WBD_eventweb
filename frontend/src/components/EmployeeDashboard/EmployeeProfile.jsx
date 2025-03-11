@@ -189,6 +189,12 @@ const EmployeeProfile = () => {
             <h1>My Profile</h1>
             <p><strong>First Name:</strong> {employeeDetails.firstName}</p>
             <p><strong>Last Name:</strong> {employeeDetails.lastName}</p>
+            <p><strong>Employee Rating:</strong> 
+              {employeeDetails.rateCount > 0 
+                ? (employeeDetails.rating / employeeDetails.rateCount).toFixed(1) 
+                     : "Not Rated Yet"}
+             </p>
+
             <p><strong>Email:</strong> {employeeDetails.email}</p>
             <p><strong>Phone:</strong> {employeeDetails.phone}</p>
             <p><strong>Marital Status:</strong> {employeeDetails.maritalStatus}</p>
