@@ -56,15 +56,17 @@ const ManageBooking = () => {
           type="text"
           value={eventType}
           onChange={(e) => setEventType(e.target.value)}
-        />
-        <br />
-
+        /><br></br>
+        
         <label className="label3">Sort By: </label>
         <select className="select3" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="price">Sort By:</option>
           <option value="">None</option>
           <option value="date">Date</option>
           <option value="price">Price</option>
         </select>
+
+        <br></br>
 
         <label className="label3">Order: </label>
         <select className="select3" value={order} onChange={(e) => setOrder(e.target.value)}>
@@ -74,7 +76,7 @@ const ManageBooking = () => {
 
         {/* Filter by Month */}
       
-        <br />
+       
 
         <button className="button3" onClick={fetchLogs} disabled={loading}>
           {loading ? 'Loading...' : 'Fetch Booking Logs'}

@@ -84,6 +84,7 @@
     font-size: 36px;
     background: none;
     border: none;
+    width: 10%;
 }
 
 .prev:hover, .next:hover {

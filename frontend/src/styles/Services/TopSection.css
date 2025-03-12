@@ -27,6 +27,7 @@
 }
 
 .top-title {
+    color:white;
     font-size: 4rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     z-index: 2; /* Make sure it appears above background overlay */

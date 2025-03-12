@@ -96,8 +96,13 @@ function ManageEmployees() {
                 alt={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
                 className="employee-image"
               />
-              <p><strong>First Name:</strong> {selectedEmployee.firstName}</p>
-              <p><strong>Last Name:</strong> {selectedEmployee.lastName}</p>
+  
+              <p><strong>Employee Name:</strong> {selectedEmployee.firstName} {selectedEmployee.lastName}</p>
+              <p><strong>Employee Rating:</strong> 
+              {selectedEmployee.rateCount > 0 
+                ? (selectedEmployee.rating / selectedEmployee.rateCount).toFixed(1) 
+                     : "Not Rated Yet"}
+             </p>
               <p><strong>Marital Status:</strong> {selectedEmployee.maritalStatus}</p>
               <p><strong>Email:</strong> {selectedEmployee.email}</p>
               <p><strong>Phone:</strong> {selectedEmployee.phone}</p>

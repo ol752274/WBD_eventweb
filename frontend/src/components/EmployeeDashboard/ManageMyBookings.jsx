@@ -86,18 +86,16 @@ const ManageMyBookings = () => {
         </select>
       </div>
 
-      {error && <p className="error-message">{error}</p>} {/* Display error message */}
+      {error && <p className="error-message"></p>} {/* Display error message */}
       {filteredBookings.length > 0 ? (
         <ul className="bookings-list">
           {filteredBookings.map((booking) => (
             <li key={booking._id} className="booking-item">
               <strong>Event Type:</strong> {booking.eventType} <br />
-              <strong>Start Date:</strong> {new Date(booking.startDate).toLocaleDateString()} <br />
-              <strong>End Date:</strong> {new Date(booking.endDate).toLocaleDateString()} <br />
-              <strong>City:</strong> {booking.city || 'N/A'} <br />
-              <strong>State:</strong> {booking.state || 'N/A'} <br />
+              <strong>Event Date:</strong> {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()} <br />
+              <strong>Event place:</strong>{booking.city} , {booking.state} <br />
               <strong>Organizer:</strong> {booking.organizerDetails.organizerName} <br />
-              <strong>Total Price:</strong> ${booking.totalPrice} <br />
+
 
               {/* Conditionally render details based on event type */}
               {booking.eventType === 'Wedding' && booking.weddingDetails && (
@@ -138,7 +136,7 @@ const ManageMyBookings = () => {
 
                 </>
               )}
-
+                       <strong>Total Price:</strong> <strong> ${booking.totalPrice} </strong><br />
 
             </li>
           ))}

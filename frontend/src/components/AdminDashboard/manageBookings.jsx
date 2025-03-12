@@ -108,16 +108,14 @@ const BookingsList = () => {
           {filteredBookings.map((booking) => (
             <li key={booking._id} className="booking-item">
               <strong>Event Type:</strong> {booking.eventType} <br />
-              <strong>Start Date:</strong> {new Date(booking.startDate).toLocaleDateString()} <br />
-              <strong>End Date:</strong> {new Date(booking.endDate).toLocaleDateString()} <br />
-              <strong>City:</strong> {booking.city} <br />
-              <strong>State:</strong> {booking.state} <br />
+              <strong>Event Date:</strong> {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()} <br />
+              <strong>Total Price:</strong>  ${booking.totalPrice} <br />
+              <strong>Event place:</strong>{booking.city} , {booking.state} <br />
               <strong>Organizer:</strong> {booking.organizerDetails.organizerName} <br />
               <strong>Contact Number:</strong> {booking.organizerDetails.contactNumber} <br />
               <strong>Email:</strong> {booking.organizerDetails.email} <br />
               <strong>Allotted Employee Email:</strong> {booking.employeeEmail} <br />
-              <strong>Total Price:</strong> ${booking.totalPrice} <br />
-
+        
               {/* Conditionally render details based on event type */}
               {booking.eventType === 'Wedding' && booking.weddingDetails && (
                 <>
@@ -161,7 +159,7 @@ const BookingsList = () => {
 
                 </>
               )}
-
+                                                    
               {/* Admin actions */}
               <div className='delete-button'>
               <button  onClick={() => deleteBooking(booking._id)}>            

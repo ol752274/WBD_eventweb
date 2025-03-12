@@ -52,6 +52,7 @@ table td button {
     font-size: 14px; /* Adjust font size */
     cursor: pointer; /* Change cursor to pointer */
     transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+    width: 50%;
 }
 
 /* Hover effect for buttons */

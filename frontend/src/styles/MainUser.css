@@ -25,7 +25,7 @@
 
 /* Apply the transparent button styles for sidebar buttons */
 .sidebar button {
-  width: 10em;
+  width: 12em;
   position: relative;
   height: 2.4em;
   border: 3px ridge #f0e68c;
@@ -161,7 +161,7 @@
 
 /* Logout button style */
 .book-del-btn {
-  width: 10em;
+  width: 90%;
   position: relative;
   height: 3.5em;
   border: 3px ridge #f0e68c;
@@ -207,7 +207,7 @@
 /* Individual card */
 .card {
   width: 300px;
-  height: 300px;
+  height: 350px;
   perspective: 1000px;
   position: relative;
   border-radius: 10px;

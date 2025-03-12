@@ -62,7 +62,7 @@ const ManageUsers = () => {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                  <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
+                  <button onClick={() => handleDeleteUser(user._id) } >Delete</button>
                 </td>
               </tr>
             ))}
