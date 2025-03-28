@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-brands-svg-icons": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@reduxjs/toolkit": "^2.5.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,14 +17,8 @@
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.28.2",
-    "react-scripts": "^5.0.1",
     "styled-components": "^6.1.14",
-    "web-vitals": "^2.1.4",
-    "@fortawesome/fontawesome-svg-core": "^6.4.0",
-    "@fortawesome/free-brands-svg-icons": "^6.4.0",
-    "@fortawesome/free-regular-svg-icons": "^6.4.0",
-    "@fortawesome/react-fontawesome": "^0.2.2"
-
+    "web-vitals": "^2.1.4"
   },
   "jest": {
     "transform": {
@@ -67,5 +65,5 @@
     "eslint": "^8.36.0",
     "jest": "^27.5.1",
     "react-scripts": "^5.0.1"
-    }
+  }
 }
