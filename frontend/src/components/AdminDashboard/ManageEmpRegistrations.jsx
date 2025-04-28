@@ -10,7 +10,7 @@ function ManageEmpRegistrations() {
     // Fetch employee data from the backend API
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost:5000/manageEmpRegistrations'); // Adjust port if necessary
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/manageEmpRegistrations`); // Adjust port if necessary
         if (!response.ok) {
           throw new Error('Failed to fetch employees');
         }
@@ -27,7 +27,7 @@ function ManageEmpRegistrations() {
 
   const approveEmployee = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/approveEmployee/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/approveEmployee/${id}`, {
         method: 'POST',
       });
       if (!response.ok) {
@@ -46,7 +46,7 @@ function ManageEmpRegistrations() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/deleteEmpRegistrations/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/deleteEmpRegistrations/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -111,7 +111,7 @@ function ManageEmpRegistrations() {
           <h2>Employee Profile</h2>
 
             <img
-              src={`http://localhost:5000/${selectedEmployee.image}`}
+              src={`${process.env.REACT_APP_API_URL}/${selectedEmployee.image}`}
               alt={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
               className="employee-image"
             />

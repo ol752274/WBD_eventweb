@@ -12,7 +12,7 @@ function MainEmployee() {
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
       try {
-        const response = await fetch('http://localhost:5000/getMyEmpProfileDetails', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getMyEmpProfileDetails`, {
           method: 'GET',
           credentials: 'include', // Ensure cookies are sent for session management
         });
@@ -42,7 +42,7 @@ function MainEmployee() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:5000/logout', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/logout`, {
         method: 'POST',
         credentials: 'include', // Ensure cookies are sent for session management
       });

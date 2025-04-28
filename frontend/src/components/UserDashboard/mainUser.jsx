@@ -17,7 +17,7 @@ const MainUser = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch('http://localhost:5000/getMyUserProfileDetails', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getMyUserProfileDetails`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -36,7 +36,7 @@ const MainUser = () => {
 
     const fetchUserBookings = async () => {
       try {
-        const response = await fetch('http://localhost:5000/MeAsUserBookings', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/MeAsUserBookings`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -68,7 +68,7 @@ const MainUser = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/updateMyUserProfile', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/updateMyUserProfile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ const MainUser = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:5000/logout', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/logout`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -120,7 +120,7 @@ const MainUser = () => {
 
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://localhost:5000/deleteUsers/${userDetails.userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/deleteUsers/${userDetails.userId}`, {
           method: 'DELETE',
           credentials: 'include',
         });
@@ -145,7 +145,7 @@ const MainUser = () => {
 
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://localhost:5000/bookings/${bookingId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/bookings/${bookingId}`, {
           method: 'DELETE',
           credentials: 'include',
         });
@@ -166,7 +166,7 @@ const MainUser = () => {
   const handleSubmitRating = async () => {
     if (!selectedBooking) return;
     try {
-      const response = await fetch(`http://localhost:5000/bookings/${selectedBooking._id}/rate`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/bookings/${selectedBooking._id}/rate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

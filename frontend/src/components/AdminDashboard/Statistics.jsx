@@ -27,7 +27,7 @@ const Statistics = () => {
             setLoading(true); // Start loading
             try {
                 console.log('Fetching data...'); // Debug log
-                const response = await axios.get('http://localhost:5000/trailAdmin'); // Adjust to your API endpoint
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/trailAdmin`); // Adjust to your API endpoint
                 console.log('Response data:', response.data); // Log the response data
                 
                 const incomeData = response.data;

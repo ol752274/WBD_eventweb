@@ -10,7 +10,7 @@ const EmployeeProfile = () => {
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
       try {
-        const response = await fetch('http://localhost:5000/getMyEmpProfileDetails', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getMyEmpProfileDetails`, {
           method: 'GET',
           credentials: 'include', // Ensure cookies are sent for session management
         });
@@ -39,7 +39,7 @@ const EmployeeProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/updateEmpProfile', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/updateEmpProfile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const EmployeeProfile = () => {
       <div className="profile-details">
         <div className="profile-image">
           <img
-            src={`http://localhost:5000/${employeeDetails.image}`}
+            src={`${process.env.REACT_APP_API_URL}/${employeeDetails.image}`}
             alt={`${employeeDetails.firstName} ${employeeDetails.lastName}`}
             className="emp-image"
           />

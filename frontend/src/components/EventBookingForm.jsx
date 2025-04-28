@@ -61,7 +61,7 @@ const EventBookingForm = () => {
     useEffect(() => {
         const fetchEmployees = async () => {
           try {
-            const response = await fetch('http://localhost:5000/manageEmployees');
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/manageEmployees`);
             if (!response.ok) {
               throw new Error('Failed to fetch employees');
             }
@@ -510,7 +510,7 @@ const EventBookingForm = () => {
             totalPrice: formData.totalPrice,
         };
 
-        fetch('http://localhost:5000/book', {
+        fetch(`${process.env.REACT_APP_API_URL}/book`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

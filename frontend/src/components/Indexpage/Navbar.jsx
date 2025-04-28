@@ -9,7 +9,7 @@ function Navbar() {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch('http://localhost:5000/user/checksession', {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/user/checksession`, {
                     credentials: 'include', // Send cookies with the request
                 });
 

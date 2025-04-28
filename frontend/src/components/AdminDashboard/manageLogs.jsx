@@ -22,7 +22,7 @@ const ManageBooking = () => {
     }).toString();
 
     try {
-      const response = await fetch(`http://localhost:5000/logs?${queryParams}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/logs?${queryParams}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch logs');

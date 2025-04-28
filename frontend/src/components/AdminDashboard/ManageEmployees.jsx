@@ -9,7 +9,7 @@ function ManageEmployees() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost:5000/manageEmployees');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/manageEmployees`);
         if (!response.ok) {
           throw new Error('Failed to fetch employees');
         }
@@ -29,7 +29,7 @@ function ManageEmployees() {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/deleteEmployee/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/deleteEmployee/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -92,7 +92,7 @@ function ManageEmployees() {
             <div className="profile-details">
             <h2>Employee Profile</h2>
               <img
-                src={`http://localhost:5000/${selectedEmployee.image}`}
+                src={`${process.env.REACT_APP_API_URL}/${selectedEmployee.image}`}
                 alt={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
                 className="employee-image"
               />

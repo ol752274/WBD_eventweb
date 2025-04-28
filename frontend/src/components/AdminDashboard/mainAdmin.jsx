@@ -11,7 +11,7 @@ function MainAdmin() {
   useEffect(() => {
     const fetchAdminName = async () => {
       try {
-        const response = await fetch('http://localhost:5000/getAdminName', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getAdminName`, {
           method: 'GET',
           credentials: 'include', // Ensure cookies are sent
         });
@@ -41,7 +41,7 @@ function MainAdmin() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:5000/logout', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/logout`, {
         method: 'POST',
         credentials: 'include', // Ensure cookies are sent
       });

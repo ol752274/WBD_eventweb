@@ -10,7 +10,7 @@ const ManageUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/manageUsers'); // Your backend API endpoint
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/manageUsers`); // Your backend API endpoint
         const data = await response.json();
         setUsers(data);
         setLoading(false);
@@ -26,7 +26,7 @@ const ManageUsers = () => {
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        const response = await fetch(`http://localhost:5000/deleteUsers/${userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/deleteUsers/${userId}`, {
           method: 'DELETE',
         });
         if (response.ok) {

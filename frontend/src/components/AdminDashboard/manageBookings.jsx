@@ -11,7 +11,7 @@ const BookingsList = () => {
   // Function to fetch bookings from the backend API
   const fetchBookings = async () => {
     try {
-      const response = await fetch('http://localhost:5000/bookings'); // Adjust API URL as needed
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/bookings`); // Adjust API URL as needed
       if (!response.ok) {
         throw new Error('Failed to fetch bookings');
       }
@@ -32,7 +32,7 @@ const BookingsList = () => {
       return; // If the user cancels, exit the function
     }
     try {
-      const response = await fetch(`http://localhost:5000/bookings/${bookingId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/bookings/${bookingId}`, {
         method: 'DELETE',
       });
 
