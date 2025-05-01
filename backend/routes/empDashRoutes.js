@@ -75,3 +75,78 @@ router.use((err, req, res, next) => {
 });
 
 module.exports = router;
+
+
+/**
+ * @swagger
+ * tags:
+ *   name: Employee Dashboard
+ *   description: Routes for managing employee dashboard and profile
+ */
+
+/**
+ * @swagger
+ * /getMyEmpProfileDetails:
+ *   get:
+ *     summary: Get the profile of the currently logged-in employee
+ *     tags: [Employee Dashboard]
+ *     responses:
+ *       200:
+ *         description: Employee profile retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Employee not found
+ */
+
+/**
+ * @swagger
+ * /updateEmpProfile:
+ *   post:
+ *     summary: Update the profile of the currently logged-in employee
+ *     tags: [Employee Dashboard]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - employeeId
+ *             properties:
+ *               employeeId:
+ *                 type: string
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               maritalStatus:
+ *                 type: string
+ *               dob:
+ *                 type: string
+ *               street:
+ *                 type: string
+ *               city:
+ *                 type: string
+ *               state:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *               experience:
+ *                 type: string
+ *               skills:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Employee profile updated successfully
+ *       400:
+ *         description: Employee ID is required
+ *       404:
+ *         description: Employee not found
+ */

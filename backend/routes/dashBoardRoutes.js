@@ -275,3 +275,179 @@ router.use((err, req, res, next) => {
 
 
   module.exports = router;
+
+  /**
+ * @swagger
+ * tags:
+ *   name: Dashboard
+ *   description: Admin dashboard management routes
+ */
+
+/**
+ * @swagger
+ * /manageEmpRegistrations:
+ *   get:
+ *     summary: Get all employee registration requests
+ *     tags: [Dashboard]
+ *     responses:
+ *       200:
+ *         description: List of employee registrations
+ */
+
+/**
+ * @swagger
+ * /approveEmployee/{id}:
+ *   post:
+ *     summary: Approve and register a pending employee
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Registration ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Employee approved successfully
+ *       404:
+ *         description: Employee not found
+ */
+
+/**
+ * @swagger
+ * /manageEmployees:
+ *   get:
+ *     summary: Get all approved employees
+ *     tags: [Dashboard]
+ *     responses:
+ *       200:
+ *         description: List of approved employees
+ */
+
+/**
+ * @swagger
+ * /deleteEmployee/{id}:
+ *   delete:
+ *     summary: Delete an approved employee
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Employee ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Employee deleted successfully
+ *       404:
+ *         description: Employee not found
+ */
+
+/**
+ * @swagger
+ * /deleteEmpRegistrations/{id}:
+ *   delete:
+ *     summary: Delete an unapproved employee registration
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Registration ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Employee registration deleted successfully
+ *       404:
+ *         description: Employee not found
+ */
+
+/**
+ * @swagger
+ * /manageUsers:
+ *   get:
+ *     summary: Get all registered users with their roles
+ *     tags: [Dashboard]
+ *     responses:
+ *       200:
+ *         description: List of users with roles
+ */
+
+/**
+ * @swagger
+ * /deleteUsers/{id}:
+ *   delete:
+ *     summary: Delete a user by ID and their associated role
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: User ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /getAdminName:
+ *   get:
+ *     summary: Get currently logged-in admin's email
+ *     tags: [Dashboard]
+ *     responses:
+ *       200:
+ *         description: Admin name retrieved
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Admin not found
+ */
+
+/**
+ * @swagger
+ * /getMyUserProfileDetails:
+ *   get:
+ *     summary: Get current user profile from session
+ *     tags: [Dashboard]
+ *     responses:
+ *       200:
+ *         description: User profile retrieved
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /updateMyUserProfile:
+ *   post:
+ *     summary: Update profile of the currently logged-in user
+ *     tags: [Dashboard]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */

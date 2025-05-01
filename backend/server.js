@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -7,6 +9,8 @@ const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 const rfs = require('rotating-file-stream');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
 // Route Handlers
@@ -19,9 +23,20 @@ const statRoutes = require('./routes/statRoutes');
 // Static Uploads
 app.use('/uploads', express.static('uploads'));
 
-// CORS Config
+const allowedOrigins = [
+  'http://localhost:3000',  // Localhost development
+  'http://frontend:3000',
+  'http://localhost:5000'    // Docker internal frontend
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
@@ -63,6 +78,27 @@ app.use(session({
   }
 }));
 
+// Swagger Setup
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'EventWeb API Documentation',
+      version: '1.0.0',
+      description: 'API documentation for the EventWeb backend',
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000', // Your server URL
+      },
+    ],
+  },
+  apis: ['./routes/*.js'], // Path to the API docs
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Routes
 app.use('/', authRoutes);
 app.use('/', dashBoardRoutes);
@@ -75,3 +111,4 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
