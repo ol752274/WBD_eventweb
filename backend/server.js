@@ -19,9 +19,19 @@ const statRoutes = require('./routes/statRoutes');
 // Static Uploads
 app.use('/uploads', express.static('uploads'));
 
-// CORS Config
+const allowedOrigins = [
+  'http://localhost:3000',  // Localhost development
+  'http://frontend:3000'    // Docker internal frontend
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 

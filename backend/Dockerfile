@@ -1,20 +1,16 @@
-# Use Node.js 20 base image
 FROM node:20
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Install backend dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the backend code
+# Copy backend code
 COPY . .
 
-# Expose port 5000 (should match your app's server port)
+# Expose port
 EXPOSE 5000
 
-# Start the server
+# Start backend server
 CMD ["npm", "start"]
