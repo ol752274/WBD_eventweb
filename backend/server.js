@@ -25,12 +25,8 @@ app.use('/uploads', express.static('uploads'));
 
 const allowedOrigins = [
   'http://localhost:3000',  // Localhost development
-<<<<<<< HEAD
-  'http://frontend:3000'    // Docker internal frontend
-=======
   'http://frontend:3000',
   'http://localhost:5000'    // Docker internal frontend
->>>>>>> be98be6c4cef7904e05d1ef6bdbd7b496dc9f6c3
 ];
 
 app.use(cors({
