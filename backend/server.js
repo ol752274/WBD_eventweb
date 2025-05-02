@@ -65,15 +65,15 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 // Session (✅ updated with connect-mongo store)
 app.use(session({
-  secret: process.env.SESSION_SECRET || "project",
+  secret: process.env.SESSION_SECRET || 'project',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: mongoURI }),
   cookie: {
-    secure: false,
+    secure: true,     // ← HTTPS only
     httpOnly: true,
-    sameSite: 'Lax',
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    sameSite: 'none', // ← allow cross‑site
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
