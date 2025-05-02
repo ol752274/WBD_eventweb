@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const MongoStore = require('connect-mongo');  // ✅ added
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
@@ -12,87 +12,100 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
-// 1) Trust proxy (needed for secure cookies behind a load‑balancer)
+// Route Handlers
+const authRoutes = require('./routes/authRoutes');
+const dashBoardRoutes = require('./routes/dashBoardRoutes');
+const bookRoutes = require('./routes/bookRoutes');
+const empdashRoutes = require('./routes/empDashRoutes');
+const statRoutes = require('./routes/statRoutes');
 app.set('trust proxy', 1);
 
-// 2) CORS: allow your React app’s origin and send cookies
+// Static Uploads
+app.use('/uploads', express.static('uploads'));
+
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://wbd-eventweb.onrender.com'  // ← make sure this matches exactly
+  'http://frontend:3000',
+  'https://wbd-eventweb-2.onrender.com',
+  'http://localhost:5000'
 ];
+
 app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) cb(null, true);
-    else cb(new Error('Not allowed by CORS'));
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
   },
-  credentials: true
+  credentials: true,
 }));
 
-// 3) Body parsing
+// Parsing Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 4) MongoDB connection
+// MongoDB Connection
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/EventWeb';
 mongoose.connect(mongoURI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// 5) Logging
-const logDir = path.join(__dirname, '../logs');
-if (!fs.existsSync(logDir)) fs.mkdirSync(logDir);
-const accessLog = rfs.createStream('access.log', { interval: '1d', path: logDir, compress: 'gzip' });
-app.use(morgan('combined', { stream: accessLog }));
+// Logging Setup
+const logDirectory = path.join(__dirname, '../logs');
+if (!fs.existsSync(logDirectory)) fs.mkdirSync(logDirectory);
 
-// 6) Sessions (Mongo‑backed, cross‑site cookies)
+const accessLogStream = rfs.createStream('access.log', {
+  interval: '1d',
+  path: logDirectory,
+  compress: 'gzip',
+});
+
+app.use(morgan('combined', { stream: accessLogStream }));
+
+// Session (✅ updated with connect-mongo store)
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'project',
+  secret: process.env.SESSION_SECRET || "project",
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: mongoURI }),
   cookie: {
-    secure: true,        // only over HTTPS
+    secure: false,
     httpOnly: true,
-    sameSite: 'none',    // allow cross‑site
-    maxAge: 24 * 60 * 60 * 1000
+    sameSite: 'Lax',
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
   }
 }));
 
-// 7) Optional: populate req.user for downstream handlers
-app.use(async (req, res, next) => {
-  if (req.session.userId) {
-    try {
-      const User = require('./models/User');
-      req.user = await User.findById(req.session.userId);
-    } catch (e) {
-      console.error('Session user load error:', e);
-    }
-  }
-  next();
-});
-
-// 8) Static uploads
-app.use('/uploads', express.static('uploads'));
-
-// 9) Swagger
-const swaggerOpts = {
+// Swagger Setup
+const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
-    info: { title: 'EventWeb API', version: '1.0.0' },
-    servers: [{ url: `https://${process.env.HOSTNAME || 'localhost'}:${process.env.PORT || 5000}` }]
+    info: {
+      title: 'EventWeb API Documentation',
+      version: '1.0.0',
+      description: 'API documentation for the EventWeb backend',
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000',
+      },
+    ],
   },
-  apis: ['./routes/*.js']
+  apis: ['./routes/*.js'],
 };
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swaggerOpts)));
 
-// 10) Routes
-app.use('/', require('./routes/authRoutes'));
-app.use('/', require('./routes/dashBoardRoutes'));
-app.use('/', require('./routes/bookRoutes'));
-app.use('/', require('./routes/empDashRoutes'));
-app.use('/', require('./routes/statRoutes'));
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Start
+// Routes
+app.use('/', authRoutes);
+app.use('/', dashBoardRoutes);
+app.use('/', bookRoutes);
+app.use('/', empdashRoutes);
+app.use('/', statRoutes);
+
+// Start Server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
