@@ -88,7 +88,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:5000',
+        url: 'https://wbd-eventweb.onrender.com',
       },
     ],
   },
