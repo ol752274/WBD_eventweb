@@ -24,21 +24,28 @@ const statRoutes = require('./routes/statRoutes');
 app.use('/uploads', express.static('uploads'));
 
 const allowedOrigins = [
-  'http://localhost:3000',  // Localhost development
-  'http://frontend:3000',
-  'http://localhost:5000'    // Docker internal frontend
+  'http://localhost:3000',                  // Local dev
+  'http://frontend:3000',                   // Docker internal
+  'http://localhost:5000',                  // If you ever hit backend locally
+  'https://wbd-eventweb-2.onrender.com',    // Your Render frontend
+  'https://wbd-eventweb.onrender.com'       // Your Render backend
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps or curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      // Echo back the origin—do NOT use '*'
+      callback(null, origin);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS: ' + origin));
     }
   },
-  credentials: true,
+  credentials: true,   // This sets Access-Control-Allow-Credentials: true
 }));
+
 
 // Parsing Middleware
 app.use(express.json());
