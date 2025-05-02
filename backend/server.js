@@ -1,5 +1,4 @@
-
-
+// server.js
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -13,100 +12,97 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
-// Route Handlers
-const authRoutes = require('./routes/authRoutes');
-const dashBoardRoutes = require('./routes/dashBoardRoutes');
-const bookRoutes = require('./routes/bookRoutes');
-const empdashRoutes = require('./routes/empDashRoutes');
-const statRoutes = require('./routes/statRoutes');
+// Route handlers
+const authRoutes     = require('./routes/authRoutes');
+const dashBoardRoutes= require('./routes/dashBoardRoutes');
+const bookRoutes     = require('./routes/bookRoutes');
+const empdashRoutes  = require('./routes/empDashRoutes');
+const statRoutes     = require('./routes/statRoutes');
 
-// Static Uploads
+// Serve uploaded files
 app.use('/uploads', express.static('uploads'));
 
+// ─── CORS SETUP ───────────────────────────────────────────────────────────────
+// Whitelist all allowed origins, including your Render URLs
 const allowedOrigins = [
-  'http://localhost:3000',                  // Local dev
-  'http://frontend:3000',                   // Docker internal
-  'http://localhost:5000',                  // If you ever hit backend locally
-  'https://wbd-eventweb-2.onrender.com',    // Your Render frontend
-  'https://wbd-eventweb.onrender.com'       // Your Render backend
+  'http://localhost:3000',                 // Local React dev
+  'http://frontend:3000',                  // Docker Compose internal
+  'http://localhost:5000',                 // Backend local
+  'https://wbd-eventweb-2.onrender.com',   // Render frontend
+  'https://wbd-eventweb.onrender.com'      // (if calling backend↔backend)
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
+// Use the array form: Cors will echo back matching origin (not '*')
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,   // Access-Control-Allow-Credentials: true
+}));
 
-// Parsing Middleware
+// ─── PARSING MIDDLEWARE ──────────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text());
 app.use(express.raw());
 
-// MongoDB Connection
+// ─── MONGODB CONNECTION ──────────────────────────────────────────────────────
+// Use only the URI string; modern drivers auto-handle parsing options
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/EventWeb';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(mongoURI)
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Logging Setup
+// ─── LOGGING SETUP ────────────────────────────────────────────────────────────
 const logDirectory = path.join(__dirname, '../logs');
 if (!fs.existsSync(logDirectory)) fs.mkdirSync(logDirectory);
-
 const accessLogStream = rfs.createStream('access.log', {
   interval: '1d',
   path: logDirectory,
   compress: 'gzip',
 });
-
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// Session
+// ─── SESSION SETUP ────────────────────────────────────────────────────────────
+// SESSION_SECRET signs the cookie. Use an env var or fallback.
 app.use(session({
-  key: "userid",
-  secret: process.env.SESSION_SECRET || "project",
+  key:    'userid',
+  secret: process.env.SESSION_SECRET || 'your-default-session-secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    expires: 60 * 60 * 24 * 1000,
-    secure: false,
+    maxAge:  1000 * 60 * 60 * 24,  // 1 day
+    secure:  false,                // set true if using HTTPS
     httpOnly: true,
-    sameSite: 'Lax',
+    sameSite: 'lax',
   }
 }));
 
-// Swagger Setup
+// ─── SWAGGER (API DOCS) ──────────────────────────────────────────────────────
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'EventWeb API Documentation',
+      title: 'EventWeb API',
       version: '1.0.0',
-      description: 'API documentation for the EventWeb backend',
+      description: 'EventWeb backend endpoints',
     },
     servers: [
-      {
-        url: 'http://localhost:5000', // Your server URL
-      },
+      { url: `https://${process.env.HOSTNAME || 'localhost'}:${process.env.PORT || 5000}` }
     ],
   },
-  apis: ['./routes/*.js'], // Path to the API docs
+  apis: ['./routes/*.js'],
 };
-
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Routes
+// ─── ROUTES ───────────────────────────────────────────────────────────────────
 app.use('/', authRoutes);
 app.use('/', dashBoardRoutes);
 app.use('/', bookRoutes);
 app.use('/', empdashRoutes);
 app.use('/', statRoutes);
 
-// Start Server
+// ─── START SERVER ────────────────────────────────────────────────────────────
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });
-
