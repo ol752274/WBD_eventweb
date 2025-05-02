@@ -52,21 +52,10 @@ app.use(limiter);
 // ==============
 // CORS Setup
 // ==============
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || FRONTEND_URLS.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Blocked by CORS policy'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['set-cookie']
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'https://wbd-eventweb-2.onrender.com',
+  credentials: true,
+}));
 app.options('*', cors(corsOptions));
 
 // ================
