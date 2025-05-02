@@ -1,0 +1,38 @@
+# render.yaml
+
+services:
+  - type: web
+    name: wbd-eventweb-backend
+    env: docker
+    repo: https://github.com/ol752274/WBD_eventweb
+    branch: main
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      # MongoDB Atlas connection
+      - key: MONGODB_URI
+        value: "mongodb+srv://ol752274:YOUR_ENCODED_PASSWORD@eventweb.lgw5ogt.mongodb.net/EventWeb?retryWrites=true&w=majority&appName=EventWeb"
+
+      # Session secret for express-session (any random string)
+      # You can reuse your JWT_SECRET here, or generate a new one.
+      - key: SESSION_SECRET
+        value: "cdjusfed"
+
+      # If you also need JWT in your app, set this
+      - key: JWT_SECRET
+        value: "cdjusfed"
+
+      # Your Google Maps API key (used elsewhere in your code)
+      - key: GOOGLE_MAPS_API_KEY
+        value: "AIzaSyDd-7FCjV9WyovfmLxZ--IjvkvXiV9qMPw"
+
+  - type: web
+    name: wbd-eventweb-frontend
+    env: docker
+    repo: https://github.com/ol752274/WBD_eventweb
+    branch: main
+    dockerfilePath: frontend/Dockerfile
+    envVars:
+      # Point your React app at the backend’s Render URL:
+      # Render will assign a public URL like https://wbd-eventweb-backend.onrender.com
+      - key: REACT_APP_API_URL
+        value: "https://wbd-eventweb.onrender.com"
