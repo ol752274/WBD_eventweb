@@ -13,18 +13,31 @@ const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
 // ─── 1. CORS (must come before body parsers & routes) ────────────────────────
+
+// Manual CORS: echo the exact origin, allow credentials, handle preflight
 const allowedOrigins = [
-  'http://localhost:3000',                 // React dev
-  'http://frontend:3000',                  // Docker internal
-  'http://localhost:5000',                 // Backend local
-  'https://wbd-eventweb-2.onrender.com',   // Deployed frontend
-  'https://wbd-eventweb.onrender.com'      // Deployed backend
+  'https://wbd-eventweb-2.onrender.com',
+  'https://wbd-eventweb.onrender.com',
+  'http://localhost:3000',
+  'http://frontend:3000',
+  'http://localhost:5000'
 ];
 
-app.use(cors({
-  origin: allowedOrigins,  // array form echoes back matching origin
-  credentials: true,       // Access-Control-Allow-Credentials: true
-}));
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  }
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// …
 
 // ─── 2. Body parsing & static uploads ────────────────────────────────────────
 app.use(express.json());
