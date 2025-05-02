@@ -12,46 +12,33 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
-// Route handlers
-const authRoutes     = require('./routes/authRoutes');
-const dashBoardRoutes= require('./routes/dashBoardRoutes');
-const bookRoutes     = require('./routes/bookRoutes');
-const empdashRoutes  = require('./routes/empDashRoutes');
-const statRoutes     = require('./routes/statRoutes');
-
-// Serve uploaded files
-app.use('/uploads', express.static('uploads'));
-
-// ─── CORS SETUP ───────────────────────────────────────────────────────────────
-// Whitelist all allowed origins, including your Render URLs
+// ─── 1. CORS (must come before body parsers & routes) ────────────────────────
 const allowedOrigins = [
-  'http://localhost:3000',                 // Local React dev
-  'http://frontend:3000',                  // Docker Compose internal
+  'http://localhost:3000',                 // React dev
+  'http://frontend:3000',                  // Docker internal
   'http://localhost:5000',                 // Backend local
-  'https://wbd-eventweb-2.onrender.com',   // Render frontend
-  'https://wbd-eventweb.onrender.com'      // (if calling backend↔backend)
+  'https://wbd-eventweb-2.onrender.com',   // Deployed frontend
+  'https://wbd-eventweb.onrender.com'      // Deployed backend
 ];
 
-// Use the array form: Cors will echo back matching origin (not '*')
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,   // Access-Control-Allow-Credentials: true
+  origin: allowedOrigins,  // array form echoes back matching origin
+  credentials: true,       // Access-Control-Allow-Credentials: true
 }));
 
-// ─── PARSING MIDDLEWARE ──────────────────────────────────────────────────────
+// ─── 2. Body parsing & static uploads ────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.text());
-app.use(express.raw());
+app.use('/uploads', express.static('uploads'));
 
-// ─── MONGODB CONNECTION ──────────────────────────────────────────────────────
-// Use only the URI string; modern drivers auto-handle parsing options
+// ─── 3. MongoDB connection ───────────────────────────────────────────────────
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/EventWeb';
-mongoose.connect(mongoURI)
+mongoose
+  .connect(mongoURI)  // modern driver auto-parses options
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// ─── LOGGING SETUP ────────────────────────────────────────────────────────────
+// ─── 4. Logging setup ────────────────────────────────────────────────────────
 const logDirectory = path.join(__dirname, '../logs');
 if (!fs.existsSync(logDirectory)) fs.mkdirSync(logDirectory);
 const accessLogStream = rfs.createStream('access.log', {
@@ -61,47 +48,57 @@ const accessLogStream = rfs.createStream('access.log', {
 });
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// ─── SESSION SETUP ────────────────────────────────────────────────────────────
-// SESSION_SECRET signs the cookie. Use an env var or fallback.
+// ─── 5. Session setup ────────────────────────────────────────────────────────
 app.use(session({
-  key:    'userid',
-  secret: process.env.SESSION_SECRET || 'your-default-session-secret',
+  key: 'userid',
+  secret: process.env.SESSION_SECRET || 'default-session-secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge:  1000 * 60 * 60 * 24,  // 1 day
-    secure:  false,                // set true if using HTTPS
+    maxAge: 1000 * 60 * 60 * 24,  // 1 day
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'lax',              // allows cross-site on GET
+    secure: false,                // set true if using HTTPS
   }
 }));
 
-// ─── SWAGGER (API DOCS) ──────────────────────────────────────────────────────
+// ─── 6. Swagger (API documentation) ──────────────────────────────────────────
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'EventWeb API',
       version: '1.0.0',
-      description: 'EventWeb backend endpoints',
+      description: 'API documentation for the EventWeb backend',
     },
     servers: [
-      { url: `https://${process.env.HOSTNAME || 'localhost'}:${process.env.PORT || 5000}` }
+      {
+        url: `https://${process.env.HOSTNAME || 'localhost'}:${process.env.PORT || 5000}`,
+      },
     ],
   },
   apis: ['./routes/*.js'],
 };
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swaggerOptions)));
 
-// ─── ROUTES ───────────────────────────────────────────────────────────────────
-app.use('/', authRoutes);
-app.use('/', dashBoardRoutes);
-app.use('/', bookRoutes);
-app.use('/', empdashRoutes);
-app.use('/', statRoutes);
+// ─── 7. Route handlers ───────────────────────────────────────────────────────
+app.use('/', require('./routes/authRoutes'));
+app.use('/', require('./routes/dashBoardRoutes'));
+app.use('/', require('./routes/bookRoutes'));
+app.use('/', require('./routes/empDashRoutes'));
+app.use('/', require('./routes/statRoutes'));
 
-// ─── START SERVER ────────────────────────────────────────────────────────────
+// ─── 8. Global error handler (with CORS headers) ─────────────────────────────
+app.use((err, req, res, next) => {
+  console.error(err);
+  res
+    .status(err.status || 500)
+    .header('Access-Control-Allow-Origin', req.headers.origin || '')
+    .header('Access-Control-Allow-Credentials', 'true')
+    .json({ error: err.message || 'Internal Server Error' });
+});
+
+// ─── 9. Start server ─────────────────────────────────────────────────────────
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
