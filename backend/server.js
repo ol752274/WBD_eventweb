@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -23,31 +21,34 @@ const statRoutes = require('./routes/statRoutes');
 // Static Uploads
 app.use('/uploads', express.static('uploads'));
 
+// Allowed Origins
 const allowedOrigins = [
   process.env.FRONTEND_URL,            // from .env
-  'https://wbd-eventweb.onrender.com', // backend if needed
+  'https://wbd-eventweb.onrender.com', // backend (self)
   'http://localhost:3000',
   'http://frontend:3000',
   'http://localhost:5000',
-  'https://wbd-eventweb-2.onrender.com'
 ];
 console.log('🛠️ Allowed Origins:', allowedOrigins);
 
+// CORS Options
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin)) {
-      callback(null, origin);
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  allowedHeaders: 'Content-Type,Authorization',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
 };
 
+// Apply CORS Middleware
 app.use(cors(corsOptions));
-
+app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // Parsing Middleware
 app.use(express.json());
@@ -70,10 +71,9 @@ const accessLogStream = rfs.createStream('access.log', {
   path: logDirectory,
   compress: 'gzip',
 });
-
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// Session
+// Session Configuration
 app.use(session({
   key: "userid",
   secret: process.env.SESSION_SECRET || "project",
@@ -98,11 +98,11 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:5000', // Your server URL
+        url: 'http://localhost:5000', // Adjust in prod if needed
       },
     ],
   },
-  apis: ['./routes/*.js'], // Path to the API docs
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -118,6 +118,5 @@ app.use('/', statRoutes);
 // Start Server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });
-
