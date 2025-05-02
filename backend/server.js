@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');  // ✅ added
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
@@ -22,10 +23,10 @@ const statRoutes = require('./routes/statRoutes');
 app.use('/uploads', express.static('uploads'));
 
 const allowedOrigins = [
-  'http://localhost:3000',  // Localhost development
+  'http://localhost:3000',
   'http://frontend:3000',
-   'https://wbd-eventweb-2.onrender.com', // Render frontend
-  'http://localhost:5000'    // Docker internal frontend
+  'https://wbd-eventweb-2.onrender.com',
+  'http://localhost:5000'
 ];
 
 app.use(cors({
@@ -42,12 +43,10 @@ app.use(cors({
 // Parsing Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.text());
-app.use(express.raw());
 
 // MongoDB Connection
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/EventWeb';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -63,17 +62,17 @@ const accessLogStream = rfs.createStream('access.log', {
 
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// Session
+// Session (✅ updated with connect-mongo store)
 app.use(session({
-  key: "userid",
   secret: process.env.SESSION_SECRET || "project",
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: mongoURI }),
   cookie: {
-    expires: 60 * 60 * 24 * 1000,
     secure: false,
     httpOnly: true,
     sameSite: 'Lax',
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
   }
 }));
 
@@ -88,11 +87,11 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:5000', // Your server URL
+        url: 'http://localhost:5000',
       },
     ],
   },
-  apis: ['./routes/*.js'], // Path to the API docs
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
