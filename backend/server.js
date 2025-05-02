@@ -31,21 +31,12 @@ const allowedOrigins = [
   'https://wbd-eventweb.onrender.com'       // Your Render backend
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. mobile apps or curl)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      // Echo back the origin—do NOT use '*'
-      callback(null, origin);
-    } else {
-      callback(new Error('Not allowed by CORS: ' + origin));
-    }
-  },
-  credentials: true,   // This sets Access-Control-Allow-Credentials: true
-}));
-
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 // Parsing Middleware
 app.use(express.json());
