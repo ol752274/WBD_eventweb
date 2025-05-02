@@ -9,6 +9,7 @@ const path = require('path');
 const rfs = require('rotating-file-stream');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const helmet = require('helmet');
 require('dotenv').config();
 
 // Route Handlers
@@ -18,12 +19,16 @@ const bookRoutes = require('./routes/bookRoutes');
 const empdashRoutes = require('./routes/empDashRoutes');
 const statRoutes = require('./routes/statRoutes');
 
+// Security Middleware
+app.use(helmet());
+
 // Static Uploads
 app.use('/uploads', express.static('uploads'));
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'https://wbd-eventweb.onrender.com',
+  'https://wbd-eventweb-2.onrender.com', // Added frontend origin
   'http://localhost:3000',
   'http://frontend:3000',
   'http://localhost:5000',
@@ -33,14 +38,19 @@ const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true); // allow non-browser requests
     if (allowedOrigins.includes(origin)) {
-      return callback(null, origin);
+      return callback(null, true); // Changed from origin to true
     } else {
       return callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
+  exposedHeaders: ['set-cookie'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+// CORS Preflight
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 
 // Parsing Middleware
@@ -51,7 +61,10 @@ app.use(express.raw());
 
 // MongoDB Connection
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/EventWeb';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -69,16 +82,24 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 // Session Setup
 app.use(session({
+  name: 'sessionId',
   key: 'userid',
   secret: process.env.SESSION_SECRET || 'project',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,          // ensure you're using HTTPS
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'None',      // needed for cross-site cookies
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    maxAge: 24 * 60 * 60 * 1000,
+    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
   },
+  store: process.env.NODE_ENV === 'production' 
+    ? new (require('connect-mongodb-session')(session))({
+      uri: mongoURI,
+      collection: 'sessions'
+    })
+    : null
 }));
 
 // Swagger Setup
@@ -92,9 +113,20 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:5000',
+        url: process.env.NODE_ENV === 'production' 
+          ? 'https://wbd-eventweb.onrender.com' 
+          : 'http://localhost:5000',
       },
     ],
+    components: {
+      securitySchemes: {
+        cookieAuth: {
+          type: 'apiKey',
+          in: 'cookie',
+          name: 'userid'
+        }
+      }
+    }
   },
   apis: ['./routes/*.js'],
 };
@@ -109,8 +141,32 @@ app.use('/', bookRoutes);
 app.use('/', empdashRoutes);
 app.use('/', statRoutes);
 
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ 
+      error: 'CORS policy blocked this request',
+      allowedOrigins: allowedOrigins.filter(o => o !== process.env.FRONTEND_URL)
+    });
+  }
+  
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
+// Health Check
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'healthy',
+    dbState: mongoose.connection.readyState,
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // Start Server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log(`Allowed origins: ${allowedOrigins.join(', ')}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
