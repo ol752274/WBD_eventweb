@@ -21,34 +21,27 @@ const statRoutes = require('./routes/statRoutes');
 // Static Uploads
 app.use('/uploads', express.static('uploads'));
 
-// Allowed Origins
 const allowedOrigins = [
-  process.env.FRONTEND_URL,            // from .env
-  'https://wbd-eventweb.onrender.com', // backend (self)
+  process.env.FRONTEND_URL,
+  'https://wbd-eventweb.onrender.com',
   'http://localhost:3000',
   'http://frontend:3000',
   'http://localhost:5000',
 ];
-console.log('🛠️ Allowed Origins:', allowedOrigins);
 
-// CORS Options
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    if (!origin) return callback(null, true); // allow non-browser requests
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, origin);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      return callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200
 };
 
-// Apply CORS Middleware
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // Parsing Middleware
 app.use(express.json());
@@ -71,20 +64,21 @@ const accessLogStream = rfs.createStream('access.log', {
   path: logDirectory,
   compress: 'gzip',
 });
+
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// Session Configuration
+// Session Setup
 app.use(session({
-  key: "userid",
-  secret: process.env.SESSION_SECRET || "project",
+  key: 'userid',
+  secret: process.env.SESSION_SECRET || 'project',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    expires: 60 * 60 * 24 * 1000,
-    secure: false,
+    secure: true,          // ensure you're using HTTPS
     httpOnly: true,
-    sameSite: 'Lax',
-  }
+    sameSite: 'None',      // needed for cross-site cookies
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  },
 }));
 
 // Swagger Setup
@@ -98,7 +92,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:5000', // Adjust in prod if needed
+        url: 'http://localhost:5000',
       },
     ],
   },
@@ -118,5 +112,5 @@ app.use('/', statRoutes);
 // Start Server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
