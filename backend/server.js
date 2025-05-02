@@ -27,7 +27,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://frontend:3000',
   'https://wbd-eventweb-2.onrender.com',
-  'http://localhost:5000'
+  'http://localhost:5000',
+  'https://wbd-eventweb.onrender.com',
 ];
 
 app.use(cors({
