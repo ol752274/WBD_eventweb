@@ -43,3 +43,36 @@ router.use((err, req, res, next) => {
   });
 
 module.exports = router;
+
+/**
+ * @swagger
+ * tags:
+ *   name: Statistics
+ *   description: Routes for admin statistics and analytics
+ */
+
+/**
+ * @swagger
+ * /trailAdmin:
+ *   get:
+ *     summary: Get total income and booking count grouped by event type
+ *     tags: [Statistics]
+ *     responses:
+ *       200:
+ *         description: Income statistics by event type
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               additionalProperties:
+ *                 type: object
+ *                 properties:
+ *                   totalIncome:
+ *                     type: number
+ *                     example: 150000
+ *                   bookingCount:
+ *                     type: integer
+ *                     example: 12
+ *       500:
+ *         description: Internal server error
+ */

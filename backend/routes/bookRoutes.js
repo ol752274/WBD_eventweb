@@ -354,3 +354,174 @@ router.use((err, req, res, next) => {
 });
 
 module.exports = router;
+
+/**
+ * @swagger
+ * tags:
+ *   name: Bookings
+ *   description: Booking management endpoints
+ */
+
+/**
+ * @swagger
+ * /bookings:
+ *   get:
+ *     summary: Get all bookings
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: List of all bookings
+ */
+
+/**
+ * @swagger
+ * /book:
+ *   post:
+ *     summary: Book an event (Users only)
+ *     tags: [Bookings]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               startDate:
+ *                 type: string
+ *               endDate:
+ *                 type: string
+ *               employeeEmail:
+ *                 type: string
+ *               organizerDetails:
+ *                 type: object
+ *     responses:
+ *       201:
+ *         description: Booking saved successfully
+ *       400:
+ *         description: Invalid input
+ */
+
+/**
+ * @swagger
+ * /bookings/{id}:
+ *   delete:
+ *     summary: Delete a booking and update employee availability
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Booking ID
+ *     responses:
+ *       200:
+ *         description: Booking deleted successfully
+ *       404:
+ *         description: Booking or employee not found
+ */
+
+/**
+ * @swagger
+ * /my-bookings:
+ *   get:
+ *     summary: Get bookings for currently logged-in employee
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: List of employee bookings
+ *       404:
+ *         description: No bookings found
+ */
+
+/**
+ * @swagger
+ * /MeAsUserBookings:
+ *   get:
+ *     summary: Get bookings made by current user
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: User's bookings retrieved successfully
+ *       404:
+ *         description: No bookings found
+ */
+
+/**
+ * @swagger
+ * /bookings/{bookingId}/rate:
+ *   post:
+ *     summary: Rate an employee for a booking
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: bookingId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Booking ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating:
+ *                 type: number
+ *                 minimum: 1
+ *                 maximum: 5
+ *     responses:
+ *       200:
+ *         description: Rating submitted successfully
+ *       400:
+ *         description: Invalid rating or missing fields
+ */
+
+/**
+ * @swagger
+ * /logs:
+ *   get:
+ *     summary: Get logs of deleted bookings with sorting
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [date, price]
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *       - in: query
+ *         name: eventType
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of logs
+ */
+
+/**
+ * @swagger
+ * /employees:
+ *   get:
+ *     summary: Get all employees
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: List of employees
+ */
+
+/**
+ * @swagger
+ * /check-session:
+ *   get:
+ *     summary: Debug route to check session data
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: Session data returned
+ */

@@ -261,3 +261,253 @@ router.use((err, req, res, next) => {
 });
 
 module.exports = router;
+
+
+
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Auth
+ *     description: Authentication and user management routes
+ */
+
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: User registration
+ *     description: Register a new user with name, email, phone, and password.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - phone
+ *               - password
+ *               - confirmPassword
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Full name of the user.
+ *               email:
+ *                 type: string
+ *                 description: Email address of the user.
+ *               phone:
+ *                 type: string
+ *                 description: Phone number of the user.
+ *               password:
+ *                 type: string
+ *                 description: Password chosen by the user.
+ *               confirmPassword:
+ *                 type: string
+ *                 description: Password confirmation field.
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: User already exists or passwords don't match
+ */
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: User login
+ *     description: Login a user based on email and password.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The email address of the user.
+ *               password:
+ *                 type: string
+ *                 description: The password of the user.
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates successful login.
+ *                 role:
+ *                   type: string
+ *                   description: The role of the user (Admin, User, Employee).
+ *                 redirectUrl:
+ *                   type: string
+ *                   description: The URL the user should be redirected to.
+ *       404:
+ *         description: Role not found
+ *       400:
+ *         description: Invalid credentials
+ */
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout user
+ *     description: End the current user session and clear cookies.
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates successful logout.
+ *                 message:
+ *                   type: string
+ *                   description: Message confirming logout.
+ *       500:
+ *         description: Failed to logout
+ */
+
+/**
+ * @swagger
+ * /forgot-password:
+ *   post:
+ *     summary: Forgot password
+ *     description: Sends a password reset link to the user's email.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The email address of the user requesting password reset.
+ *     responses:
+ *       200:
+ *         description: Password reset link sent successfully
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /reset-password:
+ *   post:
+ *     summary: Reset password
+ *     description: Reset the password for the user using the new password.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - newPassword
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The email address of the user whose password is to be reset.
+ *               newPassword:
+ *                 type: string
+ *                 description: The new password for the user.
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Employee registration
+ *     description: Register a new employee with various personal details.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - email
+ *               - phone
+ *               - password
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 description: Employee's first name.
+ *               lastName:
+ *                 type: string
+ *                 description: Employee's last name.
+ *               maritalStatus:
+ *                 type: string
+ *                 description: Employee's marital status.
+ *               dob:
+ *                 type: string
+ *                 format: date
+ *                 description: Employee's date of birth.
+ *               email:
+ *                 type: string
+ *                 description: Employee's email address.
+ *               phone:
+ *                 type: string
+ *                 description: Employee's phone number.
+ *               street:
+ *                 type: string
+ *                 description: Employee's street address.
+ *               city:
+ *                 type: string
+ *                 description: Employee's city.
+ *               state:
+ *                 type: string
+ *                 description: Employee's state.
+ *               country:
+ *                 type: string
+ *                 description: Employee's country.
+ *               experience:
+ *                 type: string
+ *                 description: Employee's work experience.
+ *               skills:
+ *                 type: string
+ *                 description: Employee's skills.
+ *               password:
+ *                 type: string
+ *                 description: Password chosen by the employee.
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile picture of the employee.
+ *     responses:
+ *       201:
+ *         description: Employee registered successfully
+ *       400:
+ *         description: Employee already exists
+ */
