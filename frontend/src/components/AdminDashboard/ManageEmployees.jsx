@@ -91,10 +91,10 @@ function ManageEmployees() {
             
             <div className="profile-details">
             <h2>Employee Profile</h2>
-              <img
-                src={`${process.env.REACT_APP_API_URL}/${selectedEmployee.image}`}
-                alt={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
-                className="employee-image"
+            <img
+              src={`data:${selectedEmployee.imageType};base64,${selectedEmployee.imageBuffer}`}
+              alt={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
+              className="employee-image"
               />
   
               <p><strong>Employee Name:</strong> {selectedEmployee.firstName} {selectedEmployee.lastName}</p>

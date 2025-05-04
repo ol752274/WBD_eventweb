@@ -358,20 +358,6 @@ const EventBookingForm = () => {
             },
             totalPrice: 0, // initial value, will be updated
         };
-    
-        // fetch(`${process.env.REACT_APP_API_URL}/checkBooking`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     credentials: 'include',
-        //     body: JSON.stringify(bookingData),
-        // })
-        // .then(response => {
-        //     if (!response.ok) {
-        //         throw new Error('Booking request failed');
-        //     }
-
 
         fetch(`${process.env.REACT_APP_API_URL}/checkBooking`, {
             method: 'POST',
@@ -964,7 +950,7 @@ const EventBookingForm = () => {
 
 
         <h3>Total Price: {formData.isPriceCalculated ? `₹${formData.totalPrice}` : 'Not yet calculated'}</h3>
-                <button className='button' type="submit">Calculate Price</button>
+                <button className='button' type="submit">Check Booking Details and calculate Price</button>
                 <button className='button' type="button" onClick={handlePayment} disabled={!isPriceCalculated}>
                     Pay & Book Now
                 </button>

@@ -11,14 +11,9 @@ const crypto = require('crypto');
 let resetTokens = {}; // A simple way to store reset tokens
 
 // Configure storage for uploaded files
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
+// Configure storage for uploaded files
+const storage = multer.memoryStorage(); // Store image in memory as a Buffer
+
 
 // Create the upload middleware
 const upload = multer({ storage: storage });
@@ -139,21 +134,18 @@ router.get('/user/checksession', (req, res) => {
 });
 
 
-router.post('/register', upload.single('image'), async (req, res, next )=> {
+router.post('/register', upload.single('image'), async (req, res) => {
   const { firstName, lastName, maritalStatus, dob, email, phone, street, city, state, country, experience, skills, password } = req.body;
 
   try {
-    // Check if email already exists
     const existingEmployee = await empRegistrations.findOne({ email });
     if (existingEmployee) {
       return res.status(400).json({ error: 'You have already registered' });
     }
 
-    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new employee
     const newEmployee = new empRegistrations({
       firstName,
       lastName,
@@ -168,15 +160,20 @@ router.post('/register', upload.single('image'), async (req, res, next )=> {
       experience,
       skills,
       password: hashedPassword,
-      image: req.file.path // Store the image path in the database
+      image: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      }
     });
 
     await newEmployee.save();
     res.status(201).json({ message: 'Your registration will be approved by us very soon' });
   } catch (error) {
-    next(error);
+    console.error('Error during registration:', error.message);
+    res.status(500).json({ error: 'An error occurred while registering the employee', details: error.message });
   }
 });
+
 // Route to fetch bookings based on email
 
 

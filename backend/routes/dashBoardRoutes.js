@@ -8,14 +8,32 @@ const Employee = require('../models/Employee');
 const Booking = require('../models/eventBookings');
 
 
-router.get('/manageEmpRegistrations', async (req, res, next) => {
-    try {
-      const employees = await empRegistrations.find(); // Fetch all employees from the database
-      res.status(200).json(employees); // Send the result as JSON
-    } catch (error) {
-      next(error);
-    }
-  });
+router.get('/manageEmpRegistrations', async (req, res) => {
+  try {
+    const employees = await empRegistrations.find();
+
+    const employeesWithImageBuffers = employees.map((employee) => {
+      let imageBufferBase64 = null;
+      let contentType = null;
+
+      if (employee.image && employee.image.data) {
+        imageBufferBase64 = employee.image.data.toString('base64');
+        contentType = employee.image.contentType;
+      }
+
+      return {
+        ...employee.toObject(),
+        imageBuffer: imageBufferBase64,
+        imageType: contentType,
+      };
+    });
+
+    res.status(200).json(employeesWithImageBuffers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch employees' });
+  }
+});
   
 
 
@@ -76,14 +94,33 @@ router.post('/approveEmployee/:id', async (req, res, next) => {
 
 
 
-  router.get('/manageEmployees', async (req, res, next) => {
-    try {
-      const employees = await Employee.find(); // Fetch all employees from the database
-      res.status(200).json(employees); // Send the result as JSON
-    } catch (error) {
-      next(error);
-    }
-  });
+router.get('/manageEmployees', async (req, res) => {
+  try {
+    const employees = await Employee.find();
+
+    const employeesWithImageBuffers = employees.map((employee) => {
+      let imageBufferBase64 = null;
+      let contentType = null;
+
+      if (employee.image && employee.image.data) {
+        imageBufferBase64 = employee.image.data.toString('base64');
+        contentType = employee.image.contentType;
+      }
+
+      return {
+        ...employee.toObject(),
+        imageBuffer: imageBufferBase64,
+        imageType: contentType,
+      };
+    });
+
+    res.status(200).json(employeesWithImageBuffers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch employees' });
+  }
+});
+
 
   router.delete('/deleteEmployee/:id', async (req, res, next) => {
     try {
