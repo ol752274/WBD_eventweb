@@ -18,6 +18,7 @@ const dashBoardRoutes = require('./routes/dashBoardRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const empdashRoutes = require('./routes/empDashRoutes');
 const statRoutes = require('./routes/statRoutes');
+const paymentRoutes = require('./routes/payment');
 app.set('trust proxy', 1);
 
 // Static Uploads
@@ -107,7 +108,7 @@ app.use('/', dashBoardRoutes);
 app.use('/', bookRoutes);
 app.use('/', empdashRoutes);
 app.use('/', statRoutes);
-
+app.use('/payment', paymentRoutes); 
 // Start Server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
