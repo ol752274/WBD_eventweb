@@ -3,7 +3,9 @@ const Booking = require('../models/eventBookings');
 const router = express.Router();
 const Log = require('../models/Logs');
 // Booking route
-const Employee = require('../models/Employee'); // Ensure the Employee model is imported
+const Employee = require('../models/Employee'); 
+const { searchLogs } = require('../servicessolar/solr');
+// Ensure the Employee model is imported
 
 // Debug route to check session data
 router.get('/check-session', (req, res) => {
@@ -342,41 +344,14 @@ router.get('/bookings', async (req, res, next) => {
 });
 
   
-router.get('/logs', async (req, res, next) => {
+router.get('/logs', async (req, res) => {
   try {
-    const { sortBy, order, eventType } = req.query;
-
-    // Build the query object
-    let query = {};
-    if (eventType) {
-      query.eventType = { $regex: eventType, $options: 'i' }; // Case-insensitive search
-    }
-    
-
-    // Fetch logs with optional sorting
-    let logs = await Log.find(query);
-
-    // Sort the logs
-    if (sortBy) {
-      logs.sort((a, b) => {
-        if (sortBy === 'date') {
-          return order === 'asc' 
-            ? new Date(a.startDate) - new Date(b.startDate) 
-            : new Date(b.startDate) - new Date(a.startDate);
-        }
-        if (sortBy === 'price') {
-          return order === 'asc' ? a.totalPrice - b.totalPrice : b.totalPrice - a.totalPrice;
-        }
-        return 0; // Default case
-      });
-    }
-
-    res.json({ logs });
-  } catch (error) {
-    next(error);
+    const results = await searchLogs(req.query); // Pass query params to Solr
+    res.json({ logs: results });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
-
 router.post('/bookings/:bookingId/rate', async (req, res, next) => {
   try {
       const { rating } = req.body; // New rating given by the user

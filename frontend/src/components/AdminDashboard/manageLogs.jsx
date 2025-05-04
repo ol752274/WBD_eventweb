@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../../styles/manageLogs.css";
 
 const ManageBooking = () => {
@@ -7,10 +7,30 @@ const ManageBooking = () => {
   const [error, setError] = useState(null);
   const [sortBy, setSortBy] = useState('');
   const [order, setOrder] = useState('asc');
-  const [eventType, setEventType] = useState('')
-  const [totalIncome, setTotalIncome] = useState(0); // State to track total income
+  const [eventType, setEventType] = useState('');
+  const [totalIncome, setTotalIncome] = useState(0);
 
-  // Fetch logs based on sorting, searching, and month filtering
+  useEffect(() => {
+    fetchInitialLogs();
+  }, []);
+
+  const fetchInitialLogs = async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`);
+      if (!res.ok) throw new Error('Failed to fetch logs');
+      const data = await res.json();
+      setLogs(data.logs);
+      calculateTotalIncome(data.logs);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Auto-fetch logs when filters change
+  useEffect(() => {
+    fetchLogs();
+  }, [sortBy, order, eventType]);
+
   const fetchLogs = async () => {
     setLoading(true);
     setError(null);
@@ -18,19 +38,15 @@ const ManageBooking = () => {
     const queryParams = new URLSearchParams({
       sortBy,
       order,
-      eventType,// Add selected month as a query param
+      eventType
     }).toString();
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/logs?${queryParams}`);
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch logs');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch logs');
       const data = await response.json();
       setLogs(data.logs);
-      calculateTotalIncome(data.logs); // Calculate total income after fetching logs
+      calculateTotalIncome(data.logs);
     } catch (err) {
       setError(err.message || 'An error occurred');
     } finally {
@@ -38,7 +54,6 @@ const ManageBooking = () => {
     }
   };
 
-  // Calculate the total income for the displayed logs
   const calculateTotalIncome = (logs) => {
     const income = logs.reduce((sum, log) => sum + log.totalPrice, 0);
     setTotalIncome(income);
@@ -48,7 +63,9 @@ const ManageBooking = () => {
     <div className="container3">
       <h2 className="heading3">View Booking Logs</h2>
 
-      {/* Search, Sort, and Month Filter Options */}
+      {/* Removed Search Bar */}
+
+      {/* Sort and Filter Options */}
       <div className="search-sort-container3">
         <label className="label3">Event Type: </label>
         <input
@@ -56,17 +73,16 @@ const ManageBooking = () => {
           type="text"
           value={eventType}
           onChange={(e) => setEventType(e.target.value)}
-        /><br></br>
-        
+        /><br />
+
         <label className="label3">Sort By: </label>
         <select className="select3" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-          <option value="price">Sort By:</option>
           <option value="">None</option>
           <option value="date">Date</option>
           <option value="price">Price</option>
         </select>
 
-        <br></br>
+        <br />
 
         <label className="label3">Order: </label>
         <select className="select3" value={order} onChange={(e) => setOrder(e.target.value)}>
@@ -74,13 +90,7 @@ const ManageBooking = () => {
           <option value="desc">Descending</option>
         </select>
 
-        {/* Filter by Month */}
-      
-       
-
-        <button className="button3" onClick={fetchLogs} disabled={loading}>
-          {loading ? 'Loading...' : 'Fetch Booking Logs'}
-        </button>
+        {/* Removed Apply Filters Button */}
       </div>
 
       {error && <div className="error-message3">{error}</div>}
@@ -89,12 +99,10 @@ const ManageBooking = () => {
         <p className="empty-state3">No booking logs found.</p>
       ) : (
         <>
-          {/* Display the total income */}
           <div className="income-summary3">
-            <strong>Total Income is </strong>₹{totalIncome.toFixed(2)}
+            <strong>Total Income: </strong>₹{totalIncome.toFixed(2)}
           </div>
 
-          {/* Booking logs table */}
           <table className="table3">
             <thead className="thead3">
               <tr>
@@ -114,7 +122,7 @@ const ManageBooking = () => {
                   <td className="td3">{new Date(log.startDate).toLocaleDateString()}</td>
                   <td className="td3">{new Date(log.endDate).toLocaleDateString()}</td>
                   <td className="td3">{log.venue}</td>
-                  <td className="td3">{log.totalPrice}</td>
+                  <td className="td3">₹{log.totalPrice.toFixed(2)}</td>
                   <td className="td3">{log.action}</td>
                   <td className="td3">{new Date(log.logTimestamp).toLocaleString()}</td>
                 </tr>
