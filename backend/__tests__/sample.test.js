@@ -26,6 +26,9 @@ afterAll(async () => {
     });
   });
 });
+afterAll(async () => {
+  await redis.quit();
+});
 
 // —— Mock all models & bcrypt ——
 jest.mock('../models/User');
@@ -42,6 +45,7 @@ const empRegistrations = require('../models/empRegistrations');
 const Employee = require('../models/Employee');
 const Booking = require('../models/eventBookings');
 const Log = require('../models/Logs');
+const redis = require('../services/redisClient');
 const bcrypt = require('bcryptjs');
 
 // —— Import routers ——
