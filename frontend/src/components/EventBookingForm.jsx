@@ -373,7 +373,7 @@ const EventBookingForm = () => {
         //     }
 
 
-        fetch(`${process.env.REACT_APP_API_URL}/book`, {
+        fetch(`${process.env.REACT_APP_API_URL}/checkBooking`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
