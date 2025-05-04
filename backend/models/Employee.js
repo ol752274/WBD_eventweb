@@ -58,8 +58,8 @@ const employeeSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String, // Store the image path or filename
-    required: true, // This can be optional
+    data: Buffer,           // Binary image data
+    contentType: String     // MIME type, e.g., 'image/png', 'image/jpeg'
   },
   employmentPeriods: [
     {

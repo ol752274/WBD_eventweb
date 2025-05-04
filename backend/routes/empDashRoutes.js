@@ -3,25 +3,42 @@ const router = express.Router();
 const Employee = require('../models/Employee');
 
 // Route to get employee details based on session email
-router.get('/getMyEmpProfileDetails', async (req, res, next) => {
+router.get('/getMyEmpProfileDetails', async (req, res) => {
   try {
-    console.log('Session email:', req.session.email); // Debugging
-    
+    console.log('Session email:', req.session.email);
+
     if (!req.session.email) {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
-    
+
     const employee = await Employee.findOne({ email: req.session.email });
+
     if (!employee) {
       return res.status(404).json({ success: false, message: 'Employee not found' });
     }
-    
-    res.json({ success: true, employee });
+
+    let imageBufferBase64 = null;
+    let contentType = null;
+
+    if (employee.image && employee.image.data) {
+      imageBufferBase64 = employee.image.data.toString('base64');
+      contentType = employee.image.contentType;
+    }
+
+    res.json({
+      success: true,
+      employee: {
+        ...employee.toObject(),
+        imageBuffer: imageBufferBase64,
+        imageType: contentType,
+      },
+    });
+
   } catch (error) {
-    next(error);
+    console.error('Error fetching employee details:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
-
 
 router.post('/updateEmpProfile', async (req, res, next)=> {
   try {

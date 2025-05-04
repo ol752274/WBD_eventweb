@@ -14,7 +14,7 @@ const BookingSchema = new mongoose.Schema({
     city: String, // New field for city
     state: String, // New field for state
     numberOfAttendees: String,
-    paymentMethod: String, // New field for payment method
+   
 
     organizerDetails: {
         organizerName: String,

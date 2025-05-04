@@ -18,6 +18,7 @@ const dashBoardRoutes = require('./routes/dashBoardRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const empdashRoutes = require('./routes/empDashRoutes');
 const statRoutes = require('./routes/statRoutes');
+const paymentRoutes = require('./routes/payment');
 app.set('trust proxy', 1);
 
 // Static Uploads
@@ -64,19 +65,21 @@ const accessLogStream = rfs.createStream('access.log', {
 
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// Session (✅ updated with connect-mongo store)
+const isProduction = process.env.NODE_ENV === 'production';
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'project',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: mongoURI }),
   cookie: {
-    secure: true,     // ← HTTPS only
+    secure: isProduction,                       // only use secure in prod
     httpOnly: true,
-    sameSite: 'none', // ← allow cross‑site
-    maxAge: 24 * 60 * 60 * 1000
+    sameSite: isProduction ? 'none' : 'lax',    // 'lax' works locally
+    maxAge: 24 * 60 * 60 * 1000,
   }
 }));
+
 
 // Swagger Setup
 const swaggerOptions = {
@@ -105,7 +108,7 @@ app.use('/', dashBoardRoutes);
 app.use('/', bookRoutes);
 app.use('/', empdashRoutes);
 app.use('/', statRoutes);
-
+app.use('/payment', paymentRoutes); 
 // Start Server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

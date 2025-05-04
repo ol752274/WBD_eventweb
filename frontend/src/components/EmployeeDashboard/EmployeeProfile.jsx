@@ -72,10 +72,10 @@ const EmployeeProfile = () => {
     <div className="employee-profile">
       <div className="profile-details">
         <div className="profile-image">
-          <img
-            src={`${process.env.REACT_APP_API_URL}/${employeeDetails.image}`}
+        <img
+           src={`data:${employeeDetails.imageType};base64,${employeeDetails.imageBuffer}`}
             alt={`${employeeDetails.firstName} ${employeeDetails.lastName}`}
-            className="emp-image"
+             className="emp-image"
           />
         </div>
 

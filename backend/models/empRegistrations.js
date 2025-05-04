@@ -57,22 +57,21 @@ const employeeRegistrationSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String, // Field to store the path or filename of the uploaded image
-    required: true, // Optional; set to true if you want it to be mandatory
+    data: Buffer,           // Binary image data
+    contentType: String     // MIME type, e.g., 'image/png', 'image/jpeg'
   },
-  employmentPeriods: [{ // Array to store multiple start and end dates
+  employmentPeriods: [{
     startDate: {
       type: Date,
       required: true,
-      default: null // Set to true if this field should be mandatory
+      default: null
     },
     endDate: {
       type: Date,
       required: true,
-      default: null // Set to true if this field should be mandatory
+      default: null
     }
   }],
-
 });
 
 // Create the model

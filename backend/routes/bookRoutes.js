@@ -39,6 +39,74 @@ const handleError = (res, message, status = 500) => {
     res.status(status).json({ error: message });
 };
 
+router.post('/checkBooking', authenticateUser, async (req, res, next) => {
+  try {
+    // Check if the user has the correct role
+    if (req.user.role !== 'User') {
+      return res.status(403).json({ error: 'Unauthorized: Only Users can book' });
+    }
+
+    // Extract required fields from the request body
+    const { startDate, endDate, employeeEmail, organizerDetails } = req.body;
+
+    // Check if the organizer's email matches the session email
+    if (organizerDetails && organizerDetails.email !== req.user.email) {
+      return res.status(400).json({ error: 'Unauthorized: Organizer email does not match session email' });
+    }
+
+    // Validate request body
+    if (!startDate || !endDate || !employeeEmail) {
+      return res.status(400).json({ error: 'Start date, end date, and employee email are required' });
+    }
+
+    // Convert the dates to Date objects
+    const newStartDate = new Date(startDate);
+    const newEndDate = new Date(endDate);
+
+    // Check for valid date range
+    if (newStartDate >= newEndDate) {
+      return res.status(400).json({ error: 'End date must be after the start date' });
+    }
+
+    // Find the selected employee
+    const selectedEmployee = await Employee.findOne({ email: employeeEmail });
+    if (!selectedEmployee) {
+      return res.status(404).json({ error: 'Selected employee does not exist' });
+    }
+
+    // Check if the employee is available for the requested period
+    const hasConflict = selectedEmployee.employmentPeriods.some(period => {
+      const periodStartDate = new Date(period.startDate);
+      const periodEndDate = new Date(period.endDate);
+
+      // Check if the new booking overlaps with existing periods
+      return (newStartDate < periodEndDate && newEndDate > periodStartDate);
+    });
+
+    if (hasConflict) {
+      return res.status(400).json({ error: 'Selected employee is not available for the requested dates' });
+    }
+
+    // Check if a booking with the same details already exists
+    const existingBooking = await Booking.findOne({
+      userEmail: req.user.email,
+      employeeEmail: employeeEmail,
+      startDate,
+      endDate,
+      // Include other relevant fields from req.body if necessary
+    });
+
+    if (existingBooking) {
+      return res.status(400).json({ error: 'A booking with the same details already exists' });
+    }
+
+    // We do all the checks here but don't save anything to the database
+
+    res.status(200).json({ message: 'All checks passed successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/book', authenticateUser, async (req, res, next) => {
   try {

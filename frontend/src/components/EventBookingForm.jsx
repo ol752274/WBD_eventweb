@@ -13,7 +13,6 @@ const EventBookingForm = () => {
         city: '',
         state: '',
         numberOfAttendees: '',
-        paymentMethod: '',
         organizerDetails: {
             organizerName: '',
             contactNumber: '',
@@ -123,6 +122,47 @@ const EventBookingForm = () => {
           }
         }
       };
+
+      const handlePayment = async () => {
+        formData.totalPrice =1;// for cheacking razerpay
+        const amount = Number((formData.totalPrice * 100).toFixed(0)); // Razorpay needs amount in paise
+    
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/payment/create-order`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ amount }),
+            });
+    
+            const order = await res.json();
+    
+            const options = {
+                key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+                amount: order.amount,
+                currency: order.currency,
+                name: 'Event Management',
+                description: 'Event Booking Payment',
+                order_id: order.id,
+                handler: async function (response) {
+                    // ✅ Call the original booking function only after payment is successful
+                    handleBookNow();
+                },
+                prefill: {
+                    name: formData.organizerDetails.organizerName || 'User',
+                    email: formData.organizerDetails.email || 'user@example.com',
+                    contact: formData.organizerDetails.contactNumber || '9999999999',
+                },
+                theme: { color: '#0f6efd' },
+            };
+    
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (error) {
+            console.error('Payment initiation failed:', error);
+            alert('Failed to initiate payment');
+        }
+    };
       
 // -------------------------------------------
 
@@ -242,17 +282,7 @@ const EventBookingForm = () => {
         }));
     };
 
-    const [paymentMethod, setPaymentMethod] = useState('');
-    const handlePaymentMethodChange = (event) => {
-        const selectedPaymentMethod = event.target.value;
-        setPaymentMethod(selectedPaymentMethod);
 
-        // Update formData with the new payment method
-        setFormData((prevData) => ({
-            ...prevData,
-            paymentMethod: selectedPaymentMethod,
-        }));
-    };
 
     const handleEventDetailsChange = (e) => {
         const { name, value } = e.target;
@@ -294,203 +324,192 @@ const EventBookingForm = () => {
         }
     };
 
+
+
+
+
+    
     const calculatePrice = () => {
-        const { 
-            numberOfAttendees, 
-            eventType, 
-            weddingDetails, 
-            birthdayDetails, 
-            socialEventDetails, 
-            corporateEventDetails, 
-            startDate, 
-            endDate 
+        const {
+            numberOfAttendees,
+            eventType,
+            weddingDetails,
+            birthdayDetails,
+            socialEventDetails,
+            corporateEventDetails,
+            startDate,
+            endDate
         } = formData;
-        
-        let price = 0;
-    
-        // Ensure numberOfAttendees is set and parse it correctly
-        const attendees = numberOfAttendees ? numberOfAttendees.split('-') : [];
-    
-        // Assign prices based on the number of attendees selected
-        if (attendees.length > 0) {
-            if (numberOfAttendees === "<500") {
-                price += 50000;
-            } else if (numberOfAttendees === "500-1000") {
-                price += 100000;
-            } else if (numberOfAttendees === "1000-1500") {
-                price += 150000;
-            } else if (numberOfAttendees === "1500-2000") {
-                price += 200000;
-            } else if (numberOfAttendees === "2000-2500") {
-                price += 250000;
-            } else if (numberOfAttendees === "2500-3000") {
-                price += 300000;
-            }
-        } else {
-            alert('Please select a valid number of attendees.');
-            return;
-        }
     
         const start = new Date(startDate);
         const end = new Date(endDate);
-        const timeDiff = end - start;
-        const dayDiff = timeDiff / (1000 * 3600 * 24);
     
-        // Add additional costs based on the number of days
-        if (dayDiff > 10) {
-            alert('The event can only last for a maximum of 10 days.');
-            return;
-        }
-        if (dayDiff >= 1 && dayDiff <= 10) {
-            price += dayDiff * 10000;
-        }
+        // First, validate the dates and attempt to book
+        // if (end < start) {
+        //     alert('End date must be greater than or equal to the start date.');
+        //     return;
+        // }
     
-        // Calculate additional costs based on event type
-        switch (eventType) {
-            case 'Wedding':
-                if (weddingDetails.weddingTheme) {
-                    const themePrices = {
-                        'classic': 300000,
-                        'rustic': 250000,
-                        'vintage': 350000,
-                        'bohemian': 280000,
-                        'beach': 400000,
-                        'garden': 230000,
-                        'fairytale': 500000,
-                        'modern': 450000,
-                        'cultural': 600000,
-                        'destination': 800000,
-                        'industrial': 700000,
-                    };
-                    price += themePrices[weddingDetails.weddingTheme] || 0;
-                }
-                if (weddingDetails.cateringPreferences) {
-                    const cateringPrices = {
-                        'veg': 150000,
-                        'nonVeg': 200000,
-                        'both': 250000,
-                    };
-                    price += cateringPrices[weddingDetails.cateringPreferences] || 0;
-                }
-                break;
-    
-            case 'Birthday':
-                if (birthdayDetails.cakeSize) {
-                    const cakePrices = {
-                        '5kg': 5000,
-                        '10kg': 10000,
-                        '15kg': 15000,
-                        '20kg': 20000,
-                        '25kg': 25000,
-                        '30kg': 30000,
-                    };
-                    price += cakePrices[birthdayDetails.cakeSize] || 0;
-                }
-    
-                if (birthdayDetails.entertainmentOptions) {
-                    const entertainmentPrices = {
-                        'liveMusic': 150000,
-                        'dj': 75000,
-                        'dancePerformance': 100000,
-                        'magicShow': 50000,
-                        'photoBooth': 30000,
-                        'karaoke': 40000,
-                        'comedyShow': 100000,
-                        'gamesAndActivities': 60000,
-                        'themedEntertainment': 125000,
-                        'fireworks': 200000,
-                    };
-                    price += entertainmentPrices[birthdayDetails.entertainmentOptions] || 0;
-                }
-                break;
-    
-            case 'Social':
-                if (socialEventDetails.eventPurpose) {
-                    const purposePrices = {
-                        'celebration': 100000,
-                        'networking': 50000,
-                        'education': 75000,
-                        'fundraising': 150000,
-                        'promotion': 200000,
-                        'awareness': 50000,
-                        'communityBuilding': 70000,
-                        'entertainment': 200000,
-                        'ceremony': 150000,
-                        'reunion': 100000,
-                    };
-                    price += purposePrices[socialEventDetails.eventPurpose] || 0;
-                }
-    
-                if (socialEventDetails.entertainment) {
-                    const entertainmentPrices = {
-                        'liveMusic': 150000,
-                        'dj': 75000,
-                        'dancePerformance': 100000,
-                        'magicShow': 50000,
-                        'photoBooth': 30000,
-                        'karaoke': 40000,
-                        'comedyShow': 100000,
-                        'gamesAndActivities': 60000,
-                        'themedEntertainment': 125000,
-                        'fireworks': 200000,
-                    };
-                    price += entertainmentPrices[socialEventDetails.entertainment] || 0;
-                }
-                break;
-    
-            case 'Corporate':
-                if (corporateEventDetails.agenda) {
-                    const agendaPrices = {
-                        'welcomeSpeech': 50000,
-                        'keynotePresentation': 75000,
-                        'workshop': 100000,
-                        'panelDiscussion': 125000,
-                        'networking': 50000,
-                        'productLaunch': 150000,
-                        'awardCeremony': 200000,
-                    };
-                    price += agendaPrices[corporateEventDetails.agenda] || 0;
-                }
-    
-                if (corporateEventDetails.equipmentRequired) {
-                    const equipmentPrices = {
-                        'soundSystem': 50000,
-                        'projector': 25000,
-                        'microphones': 10000,
-                        'lighting': 40000,
-                        'tablesAndChairs': 30000,
-                        'staging': 100000,
-                        'tents': 75000,
-                        'cateringEquipment': 50000,
-                        'decorativeItems': 20000,
-                        'videoRecording': 60000,
-                    };
-                    price += equipmentPrices[corporateEventDetails.equipmentRequired] || 0;
-                }
-    
-                if (corporateEventDetails.cateringServices) {
-                    const cateringPrices = {
-                        'veg': 150000,
-                        'nonVeg': 200000,
-                        'both': 250000,
-                    };
-                    price += cateringPrices[corporateEventDetails.cateringServices] || 0;
-                }
-                break;
-    
-            default:
-                break;
-        }
-    
-        // Set the total price in the form data state
-        setFormData((prevData) => ({
-            ...prevData,
-            totalPrice: price,
-            isPriceCalculated: true,
-        }));
-        setIsPriceCalculated(true);
+        const bookingData = {
+            ...formData,
+            eventTime: {
+                startDate,
+                endDate,
+            },
+            totalPrice: 0, // initial value, will be updated
+        };
 
+        fetch(`${process.env.REACT_APP_API_URL}/checkBooking`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(bookingData),
+        })
+        .then(response => {
+            if (!response.ok) {
+                // If the response is not OK, we can parse the error message
+                return response.json().then(err => {
+                    throw new Error(err.error || 'An unknown error occurred');
+                });
+            }
+            // If everything is okay, proceed
+       
+        
+        
+    
+            // Booking was successful, proceed with price calculation
+            let price = 0;
+    
+            const attendees = numberOfAttendees ? numberOfAttendees.split('-') : [];
+            if (attendees.length > 0) {
+                if (numberOfAttendees === "<500") price += 50000;
+                else if (numberOfAttendees === "500-1000") price += 100000;
+                else if (numberOfAttendees === "1000-1500") price += 150000;
+                else if (numberOfAttendees === "1500-2000") price += 200000;
+                else if (numberOfAttendees === "2000-2500") price += 250000;
+                else if (numberOfAttendees === "2500-3000") price += 300000;
+            } else {
+                alert('Please select a valid number of attendees.');
+                return;
+            }
+    
+            const timeDiff = end - start;
+            const dayDiff = timeDiff / (1000 * 3600 * 24);
+    
+            if (dayDiff > 10) {
+                alert('The event can only last for a maximum of 10 days.');
+                return;
+            }
+    
+            if (dayDiff >= 1 && dayDiff <= 10) {
+                price += dayDiff * 10000;
+            }
+    
+            // Event type specific pricing logic
+            switch (eventType) {
+                case 'Wedding':
+                    if (weddingDetails.weddingTheme) {
+                        const themePrices = {
+                            'classic': 300000, 'rustic': 250000, 'vintage': 350000,
+                            'bohemian': 280000, 'beach': 400000, 'garden': 230000,
+                            'fairytale': 500000, 'modern': 450000, 'cultural': 600000,
+                            'destination': 800000, 'industrial': 700000,
+                        };
+                        price += themePrices[weddingDetails.weddingTheme] || 0;
+                    }
+                    if (weddingDetails.cateringPreferences) {
+                        const cateringPrices = {
+                            'veg': 150000, 'nonVeg': 200000, 'both': 250000,
+                        };
+                        price += cateringPrices[weddingDetails.cateringPreferences] || 0;
+                    }
+                    break;
+    
+                case 'Birthday':
+                    if (birthdayDetails.cakeSize) {
+                        const cakePrices = {
+                            '5kg': 5000, '10kg': 10000, '15kg': 15000,
+                            '20kg': 20000, '25kg': 25000, '30kg': 30000,
+                        };
+                        price += cakePrices[birthdayDetails.cakeSize] || 0;
+                    }
+                    if (birthdayDetails.entertainmentOptions) {
+                        const entertainmentPrices = {
+                            'liveMusic': 150000, 'dj': 75000, 'dancePerformance': 100000,
+                            'magicShow': 50000, 'photoBooth': 30000, 'karaoke': 40000,
+                            'comedyShow': 100000, 'gamesAndActivities': 60000,
+                            'themedEntertainment': 125000, 'fireworks': 200000,
+                        };
+                        price += entertainmentPrices[birthdayDetails.entertainmentOptions] || 0;
+                    }
+                    break;
+    
+                case 'Social':
+                    if (socialEventDetails.eventPurpose) {
+                        const purposePrices = {
+                            'celebration': 100000, 'networking': 50000, 'education': 75000,
+                            'fundraising': 150000, 'promotion': 200000, 'awareness': 50000,
+                            'communityBuilding': 70000, 'entertainment': 200000,
+                            'ceremony': 150000, 'reunion': 100000,
+                        };
+                        price += purposePrices[socialEventDetails.eventPurpose] || 0;
+                    }
+                    if (socialEventDetails.entertainment) {
+                        const entertainmentPrices = {
+                            'liveMusic': 150000, 'dj': 75000, 'dancePerformance': 100000,
+                            'magicShow': 50000, 'photoBooth': 30000, 'karaoke': 40000,
+                            'comedyShow': 100000, 'gamesAndActivities': 60000,
+                            'themedEntertainment': 125000, 'fireworks': 200000,
+                        };
+                        price += entertainmentPrices[socialEventDetails.entertainment] || 0;
+                    }
+                    break;
+    
+                case 'Corporate':
+                    if (corporateEventDetails.agenda) {
+                        const agendaPrices = {
+                            'welcomeSpeech': 50000, 'keynotePresentation': 75000,
+                            'workshop': 100000, 'panelDiscussion': 125000,
+                            'networking': 50000, 'productLaunch': 150000,
+                            'awardCeremony': 200000,
+                        };
+                        price += agendaPrices[corporateEventDetails.agenda] || 0;
+                    }
+                    if (corporateEventDetails.equipmentRequired) {
+                        const equipmentPrices = {
+                            'soundSystem': 50000, 'projector': 25000, 'microphones': 10000,
+                            'lighting': 40000, 'tablesAndChairs': 30000, 'staging': 100000,
+                            'tents': 75000, 'cateringEquipment': 50000,
+                            'decorativeItems': 20000, 'videoRecording': 60000,
+                        };
+                        price += equipmentPrices[corporateEventDetails.equipmentRequired] || 0;
+                    }
+                    if (corporateEventDetails.cateringServices) {
+                        const cateringPrices = {
+                            'veg': 150000, 'nonVeg': 200000, 'both': 250000,
+                        };
+                        price += cateringPrices[corporateEventDetails.cateringServices] || 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+    
+            setFormData((prevData) => ({
+                ...prevData,
+                totalPrice: price,
+                isPriceCalculated: true,
+            }));
+    
+            setIsPriceCalculated(true);
+        })
+        .catch(error => {
+            alert('Booking failed: ' + error.message);
+        });
     };
+    
     
     const handleBookNow = () => {
         const startDate = new Date(formData.startDate);
@@ -539,7 +558,6 @@ const EventBookingForm = () => {
                     city: '',
                     state: '',
                     numberOfAttendees: '',
-                    paymentMethod: '',
                     organizerDetails: {
                         organizerName: '',
                         contactNumber: '',
@@ -899,17 +917,6 @@ const EventBookingForm = () => {
 
                     </>
                 )}
-                <h3>Payment Method</h3>
-               
-                <label className='label'>
-                  <select className="select-field" value={paymentMethod} onChange={handlePaymentMethodChange}>
-                     <option value="">Select Payment Method</option>
-                     <option value="Credit Card">Credit Card</option>
-                     <option value="Debit Card">Debit Card</option>
-                     <option value="PayPal">PayPal</option>
-                     <option value="Net Banking">Net Banking</option>
-                  </select>
-                </label>
 
                 <h3>Employee</h3>
                 
@@ -943,8 +950,10 @@ const EventBookingForm = () => {
 
 
         <h3>Total Price: {formData.isPriceCalculated ? `₹${formData.totalPrice}` : 'Not yet calculated'}</h3>
-                <button className='button' type="submit">Calculate Price</button>
-                <button className='button' type="button" onClick={handleBookNow} disabled={!isPriceCalculated}>Book Now</button>
+                <button className='button' type="submit">Check Booking Details and calculate Price</button>
+                <button className='button' type="button" onClick={handlePayment} disabled={!isPriceCalculated}>
+                    Pay & Book Now
+                </button>
             </form>
         </div>
     );
