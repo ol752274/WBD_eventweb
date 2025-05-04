@@ -14,33 +14,51 @@ jobs:
         node-version: [20]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: |
-        cd frontend
-        npm ci
-      env:
-        CI: false
-    - run: |
-        cd frontend
-        npm install @fortawesome/free-solid-svg-icons
-      env:
-        CI: false
-    - run: |
-        cd backend
-        npm ci
-    - run: |
-        cd frontend
-        npm run build --if-present
-      env:
-        CI: false
-    - run: |
-        cd frontend
-        npm test
-    - run: |
-        cd backend
-        npm test
+      # 1) Checkout your repo
+      - uses: actions/checkout@v4
+
+      # 2) Install Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      # 3) Frontend: clean install (requires package-lock.json)
+      - name: Install front-end deps
+        working-directory: ./frontend
+        run: npm ci
+
+      # 4) Frontend: install any ad-hoc packages
+      - name: Add FontAwesome icons
+        working-directory: ./frontend
+        run: npm install @fortawesome/free-solid-svg-icons
+
+      # 5) Backend: fall back to npm install if no lockfile
+      - name: Install back-end deps
+        working-directory: ./backend
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      # 6) Build front end (suppress CRA warnings from failing the build)
+      - name: Build front-end
+        working-directory: ./frontend
+        env:
+          CI: false
+        run: npm run build --if-present
+
+      # 7) Test front end (enable watch mode locally if desired)
+      - name: Test front-end
+        working-directory: ./frontend
+        env:
+          CI: false
+        run: npm test
+
+      # 8) Test back end
+      - name: Test back-end
+        working-directory: ./backend
+        run: npm test
