@@ -123,6 +123,47 @@ const EventBookingForm = () => {
           }
         }
       };
+
+      const handlePayment = async () => {
+        formData.totalPrice =1;// for cheacking razerpay
+        const amount = Number((formData.totalPrice * 100).toFixed(0)); // Razorpay needs amount in paise
+    
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/payment/create-order`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ amount }),
+            });
+    
+            const order = await res.json();
+    
+            const options = {
+                key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+                amount: order.amount,
+                currency: order.currency,
+                name: 'Event Management',
+                description: 'Event Booking Payment',
+                order_id: order.id,
+                handler: async function (response) {
+                    // ✅ Call the original booking function only after payment is successful
+                    handleBookNow();
+                },
+                prefill: {
+                    name: formData.organizerDetails.organizerName || 'User',
+                    email: formData.organizerDetails.email || 'user@example.com',
+                    contact: formData.organizerDetails.contactNumber || '9999999999',
+                },
+                theme: { color: '#0f6efd' },
+            };
+    
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (error) {
+            console.error('Payment initiation failed:', error);
+            alert('Failed to initiate payment');
+        }
+    };
       
 // -------------------------------------------
 
@@ -899,17 +940,6 @@ const EventBookingForm = () => {
 
                     </>
                 )}
-                <h3>Payment Method</h3>
-               
-                <label className='label'>
-                  <select className="select-field" value={paymentMethod} onChange={handlePaymentMethodChange}>
-                     <option value="">Select Payment Method</option>
-                     <option value="Credit Card">Credit Card</option>
-                     <option value="Debit Card">Debit Card</option>
-                     <option value="PayPal">PayPal</option>
-                     <option value="Net Banking">Net Banking</option>
-                  </select>
-                </label>
 
                 <h3>Employee</h3>
                 
@@ -944,7 +974,9 @@ const EventBookingForm = () => {
 
         <h3>Total Price: {formData.isPriceCalculated ? `₹${formData.totalPrice}` : 'Not yet calculated'}</h3>
                 <button className='button' type="submit">Calculate Price</button>
-                <button className='button' type="button" onClick={handleBookNow} disabled={!isPriceCalculated}>Book Now</button>
+                <button className='button' type="button" onClick={handlePayment} disabled={!isPriceCalculated}>
+                    Pay & Book Now
+                </button>
             </form>
         </div>
     );

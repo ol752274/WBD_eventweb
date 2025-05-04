@@ -64,19 +64,21 @@ const accessLogStream = rfs.createStream('access.log', {
 
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// Session (✅ updated with connect-mongo store)
+const isProduction = process.env.NODE_ENV === 'production';
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'project',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: mongoURI }),
   cookie: {
-    secure: true,     // ← HTTPS only
+    secure: isProduction,                       // only use secure in prod
     httpOnly: true,
-    sameSite: 'none', // ← allow cross‑site
-    maxAge: 24 * 60 * 60 * 1000
+    sameSite: isProduction ? 'none' : 'lax',    // 'lax' works locally
+    maxAge: 24 * 60 * 60 * 1000,
   }
 }));
+
 
 // Swagger Setup
 const swaggerOptions = {
