@@ -11,48 +11,34 @@ const ManageBooking = () => {
   const [totalIncome, setTotalIncome] = useState(0);
 
   useEffect(() => {
-    fetchInitialLogs();
-  }, []);
+    const fetchLogs = async () => {
+      setLoading(true);
+      setError(null);
 
-  const fetchInitialLogs = async () => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/logs`);
-      if (!res.ok) throw new Error('Failed to fetch logs');
-      const data = await res.json();
-      setLogs(data.logs);
-      calculateTotalIncome(data.logs);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+      const queryParams = new URLSearchParams({
+        sortBy,
+        order,
+        eventType,
+      }).toString();
 
-  // Auto-fetch logs when filters change
-  useEffect(() => {
-    fetchLogs();
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/logs?${queryParams}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch logs');
+        }
+
+        const data = await response.json();
+        setLogs(data.logs);
+        calculateTotalIncome(data.logs);
+      } catch (err) {
+        setError(err.message || 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLogs(); // Automatically fetch on any change to filters
   }, [sortBy, order, eventType]);
-
-  const fetchLogs = async () => {
-    setLoading(true);
-    setError(null);
-
-    const queryParams = new URLSearchParams({
-      sortBy,
-      order,
-      eventType
-    }).toString();
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/logs?${queryParams}`);
-      if (!response.ok) throw new Error('Failed to fetch logs');
-      const data = await response.json();
-      setLogs(data.logs);
-      calculateTotalIncome(data.logs);
-    } catch (err) {
-      setError(err.message || 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const calculateTotalIncome = (logs) => {
     const income = logs.reduce((sum, log) => sum + log.totalPrice, 0);
@@ -63,9 +49,6 @@ const ManageBooking = () => {
     <div className="container3">
       <h2 className="heading3">View Booking Logs</h2>
 
-      {/* Removed Search Bar */}
-
-      {/* Sort and Filter Options */}
       <div className="search-sort-container3">
         <label className="label3">Event Type: </label>
         <input
@@ -73,7 +56,7 @@ const ManageBooking = () => {
           type="text"
           value={eventType}
           onChange={(e) => setEventType(e.target.value)}
-        /><br />
+        />
 
         <label className="label3">Sort By: </label>
         <select className="select3" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
@@ -82,15 +65,11 @@ const ManageBooking = () => {
           <option value="price">Price</option>
         </select>
 
-        <br />
-
         <label className="label3">Order: </label>
         <select className="select3" value={order} onChange={(e) => setOrder(e.target.value)}>
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-
-        {/* Removed Apply Filters Button */}
       </div>
 
       {error && <div className="error-message3">{error}</div>}
@@ -100,7 +79,7 @@ const ManageBooking = () => {
       ) : (
         <>
           <div className="income-summary3">
-            <strong>Total Income: </strong>₹{totalIncome.toFixed(2)}
+            <strong>Total Income is </strong>₹{totalIncome.toFixed(2)}
           </div>
 
           <table className="table3">
@@ -122,7 +101,7 @@ const ManageBooking = () => {
                   <td className="td3">{new Date(log.startDate).toLocaleDateString()}</td>
                   <td className="td3">{new Date(log.endDate).toLocaleDateString()}</td>
                   <td className="td3">{log.venue}</td>
-                  <td className="td3">₹{log.totalPrice.toFixed(2)}</td>
+                  <td className="td3">{log.totalPrice}</td>
                   <td className="td3">{log.action}</td>
                   <td className="td3">{new Date(log.logTimestamp).toLocaleString()}</td>
                 </tr>

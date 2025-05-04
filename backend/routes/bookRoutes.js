@@ -4,7 +4,6 @@ const router = express.Router();
 const Log = require('../models/Logs');
 // Booking route
 const Employee = require('../models/Employee'); 
-const { searchLogs } = require('../servicessolar/solr');
 // Ensure the Employee model is imported
 
 // Debug route to check session data
@@ -346,12 +345,36 @@ router.get('/bookings', async (req, res, next) => {
   
 router.get('/logs', async (req, res) => {
   try {
-    const results = await searchLogs(req.query); // Pass query params to Solr
-    res.json({ logs: results });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const { sortBy, order, eventType } = req.query;
+
+    let query = {};
+    if (eventType) {
+      query.eventType = { $regex: eventType, $options: 'i' };
+    }
+
+    let logs = await Log.find(query);
+
+    if (sortBy) {
+      logs.sort((a, b) => {
+        if (sortBy === 'date') {
+          return order === 'asc' 
+            ? new Date(a.startDate) - new Date(b.startDate) 
+            : new Date(b.startDate) - new Date(a.startDate);
+        }
+        if (sortBy === 'price') {
+          return order === 'asc' ? a.totalPrice - b.totalPrice : b.totalPrice - a.totalPrice;
+        }
+        return 0;
+      });
+    }
+
+    res.json({ logs });
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+    res.status(500).json({ error: 'Error fetching logs: ' + error.message });
   }
 });
+
 router.post('/bookings/:bookingId/rate', async (req, res, next) => {
   try {
       const { rating } = req.body; // New rating given by the user

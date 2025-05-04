@@ -12,10 +12,6 @@ COPY . .
 # Expose port
 EXPOSE 5000
 
-# Set environment variables
-# Matches the service name in docker-compose
-ENV SOLR_HOST=solr
-ENV SOLR_PORT=8983
 
 # Start backend server
 CMD ["npm", "start"]
