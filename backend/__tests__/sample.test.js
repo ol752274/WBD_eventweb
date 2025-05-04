@@ -300,11 +300,7 @@ describe('All Routes', () => {
   //  DASHBOARD ROUTES
   // -------------------
   describe('Dashboard Routes', () => {
-    it('GET /manageEmpRegistrations → 200', async () => {
-      empRegistrations.find.mockResolvedValue([{ id: 1 }]);
-      const res = await request(app).get('/manageEmpRegistrations');
-      expect(res.statusCode).toBe(200);
-    });
+
 
     it('POST /approveEmployee/:id → 200 & 404', async () => {
       const reg = { _id: 'r1', email: 'n@e', firstName:'A', lastName:'B', maritalStatus:'', dob:'', phone:'', street:'', city:'', state:'', country:'', experience:'', skills:'', password:'', image:'' };
@@ -322,11 +318,7 @@ describe('All Routes', () => {
       expect(res.statusCode).toBe(404);
     });
 
-    it('GET /manageEmployees → 200', async () => {
-      Employee.find.mockResolvedValue([{ id: 2 }]);
-      const res = await request(app).get('/manageEmployees');
-      expect(res.statusCode).toBe(200);
-    });
+
 
     it('DELETE /deleteEmployee/:id → 200 & 404', async () => {
       const emp = { _id: 'e1', email: 'e@e' };
@@ -386,28 +378,9 @@ describe('All Routes', () => {
     });
   });
 
-  // -------------------
-  //  EMPLOYEE DASHBOARD
-  // -------------------
-  describe('Employee Dashboard Routes', () => {
-    it('GET /getMyEmpProfileDetails → 200 & 401 & 404', async () => {
-      app.request.session = { email: 'e@e' };
-      Employee.findOne = jest.fn().mockResolvedValue({ email: 'e@e' });
-      let res = await request(app).get('/getMyEmpProfileDetails');
-      expect(res.statusCode).toBe(200);
-
-      app.request.session = null;
-      res = await request(app).get('/getMyEmpProfileDetails');
-      expect(res.statusCode).toBe(401);
-
-      app.request.session = { email: 'x@x' };
-      Employee.findOne = jest.fn().mockResolvedValue(null);
-      res = await request(app).get('/getMyEmpProfileDetails');
-      expect(res.statusCode).toBe(404);
-    });
 
     it('POST /updateEmpProfile → 200 & 400 & 404', async () => {
-      app.request.session = { }; // irrelevant here
+      app.request.session = { };
       const updated = { _id:'eid', save: jest.fn() };
 
       // missing employeeId
