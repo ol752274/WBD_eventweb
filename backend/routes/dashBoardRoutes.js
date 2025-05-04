@@ -6,6 +6,7 @@ const Role = require('../models/Roles');
 const empRegistrations = require('../models/empRegistrations'); 
 const Employee = require('../models/Employee');
 const Booking = require('../models/eventBookings');
+const redis = require('../services/redisClient'); 
 
 
 router.get('/manageEmpRegistrations', async (req, res) => {
@@ -163,28 +164,47 @@ router.delete('/deleteEmpRegistrations/:id', async (req, res, next) => {
 });
 
 
+
 router.get('/manageUsers', async (req, res, next) => {
   try {
-    const users = await User.find(); // Fetch users from the database
-    const roles = await Role.find(); // Fetch all roles
+    const cacheKey = 'manageUsersData';
+    const cachedData = await redis.get(cacheKey);
+    if (cachedData) {
+      console.log('✅ Serving users from Redis cache');
+      return res.status(200).json(JSON.parse(cachedData));
+    }
 
-    // Map roles to an easier access structure
+    // Step 2: Fetch from MongoDB
+    const users = await User.find(); // Fetch users
+    const roles = await Role.find(); // Fetch roles
+
+    // Map roles to user emails
     const roleMap = {};
     roles.forEach(role => {
-      roleMap[role.email] = role.role; // Assuming role is associated with user by email
+      roleMap[role.email] = role.role;
     });
 
-    // Attach roles to users
+    // Combine users with roles
     const usersWithRoles = users.map(user => ({
-      ...user._doc, // Spread user document
-      role: roleMap[user.email] || 'No Role' // Assign role based on email
+      ...user.toObject(),
+      role: roleMap[user.email] || 'No Role'
     }));
 
-    res.json(usersWithRoles);
-  } catch (err) {
-    next(err);
+    if (usersWithRoles.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    // Step 3: Cache the data in Redis (TTL: 10 minutes)
+    await redis.set(cacheKey, JSON.stringify(usersWithRoles), 'EX', 600);
+    console.log('📦 Data cached in Redis for 10 minutes');
+
+    res.status(200).json(usersWithRoles);
+  } catch (error) {
+    console.error('❌ Error fetching users:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 // Update a user by ID
 
@@ -263,7 +283,7 @@ router.get('/getMyUserProfileDetails', async (req, res, next) => {
     next(error);
   }
 });
-;
+
 
 router.post('/updateMyUserProfile', async (req, res, next) => {
   try {
