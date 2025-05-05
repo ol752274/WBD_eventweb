@@ -57,22 +57,30 @@ const employeeRegistrationSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    data: Buffer,           // Binary image data
-    contentType: String     // MIME type, e.g., 'image/png', 'image/jpeg'
+    type: String, // Field to store the path or filename of the uploaded image
+    required: true, // Optional; set to true if you want it to be mandatory
   },
-  employmentPeriods: [{
+  employmentPeriods: [{ // Array to store multiple start and end dates
     startDate: {
       type: Date,
       required: true,
-      default: null
+      default: null // Set to true if this field should be mandatory
     },
     endDate: {
       type: Date,
       required: true,
-      default: null
+      default: null // Set to true if this field should be mandatory
     }
   }],
 });
+
+
+employeeRegistrationSchema.index({ email: 1 }); // Index by email for quick lookups
+employeeRegistrationSchema.index({ city: 1 });  // Index by city for faster city-based searches
+employeeRegistrationSchema.index({ state: 1 }); // Index by state for state-based searches
+employeeRegistrationSchema.index({ country: 1 }); // Index by country for faster location-based queries
+employeeRegistrationSchema.index({ experience: 1 }); // Index by experience for fast filtering
+employeeRegistrationSchema.index({ skills: 1 }); // Index by skills for quicker search by skills
 
 // Create the model
 const empRegistrations = mongoose.model('empRegistrations', employeeRegistrationSchema);
