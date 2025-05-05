@@ -206,7 +206,6 @@ router.get('/manageUsers', async (req, res, next) => {
 });
 
 
-// Update a user by ID
 
 
 // Delete a user by ID
