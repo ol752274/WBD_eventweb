@@ -345,28 +345,22 @@ router.get('/bookings', async (req, res, next) => {
   
 router.get('/logs', async (req, res) => {
   try {
-    const { sortBy, order, eventType } = req.query;
+    const { sortBy, order = 'desc', eventType } = req.query;
 
-    let query = {};
+    const query = {};
     if (eventType) {
       query.eventType = { $regex: eventType, $options: 'i' };
     }
 
-    let logs = await Log.find(query);
-
-    if (sortBy) {
-      logs.sort((a, b) => {
-        if (sortBy === 'date') {
-          return order === 'asc' 
-            ? new Date(a.startDate) - new Date(b.startDate) 
-            : new Date(b.startDate) - new Date(a.startDate);
-        }
-        if (sortBy === 'price') {
-          return order === 'asc' ? a.totalPrice - b.totalPrice : b.totalPrice - a.totalPrice;
-        }
-        return 0;
-      });
+    const sortOptions = {};
+    if (sortBy === 'date') {
+      sortOptions.startDate = order === 'asc' ? 1 : -1;
+    } else if (sortBy === 'price') {
+      sortOptions.totalPrice = order === 'asc' ? 1 : -1;
     }
+
+    const logs = await Log.find(query).sort(sortOptions).lean();
+
 
     res.json({ logs });
   } catch (error) {
