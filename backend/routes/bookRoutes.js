@@ -343,7 +343,7 @@ router.get('/bookings', async (req, res, next) => {
 });
 
   
-router.get('/logs', async (req, res) => {
+router.get('/logs', async (req, res, next) => {
   try {
     const { sortBy, order = 'desc', eventType } = req.query;
 

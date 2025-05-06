@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import "../../styles/manageLogs.css";
 
 const ManageBooking = () => {
@@ -60,6 +60,7 @@ const ManageBooking = () => {
 
         <label className="label3">Sort By: </label>
         <select className="select3" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="price">Sort By:</option>
           <option value="">None</option>
           <option value="date">Date</option>
           <option value="price">Price</option>
@@ -78,10 +79,12 @@ const ManageBooking = () => {
         <p className="empty-state3">No booking logs found.</p>
       ) : (
         <>
+          {/* Display the total income */}
           <div className="income-summary3">
             <strong>Total Income is </strong>₹{totalIncome.toFixed(2)}
           </div>
 
+          {/* Booking logs table */}
           <table className="table3">
             <thead className="thead3">
               <tr>
