@@ -12,6 +12,5 @@ COPY . .
 # Expose port
 EXPOSE 5000
 
-
 # Start backend server
 CMD ["npm", "start"]
